@@ -1,34 +1,27 @@
 buildscript {
     repositories {
-        maven {
-            url 'https://dl.bintray.com/giancosta86/Hephaestus'
-        }
+        //TODO! Del this
+        mavenLocal()
 
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
-        classpath 'info.gianlucacosta.moonlicense:moonlicense-gradle:4.3'
-        classpath 'info.gianlucacosta.moondeploy:moondeploy-gradle:3.3'
-        classpath 'info.gianlucacosta.aurora:aurora:9.0'
+        classpath 'info.gianlucacosta.aurora:aurora:10.0.0-SNAPSHOT'
     }
 }
 
 
 apply plugin: 'scala'
 apply plugin: 'application'
-apply plugin: 'info.gianlucacosta.moonlicense'
-apply plugin: 'info.gianlucacosta.moondeploy'
 apply plugin: 'info.gianlucacosta.aurora'
 
 
 group = 'info.gianlucacosta.graphsj'
 archivesBaseName = 'graphsj'
-version = '6.3'
+version = '7.0.0-SNAPSHOT'
 
 description = 'ScalaFX didactic application for graph algorithms'
-
-project.ext.facebookPage = 'https://www.facebook.com/graphsj'
 
 mainClassName = "info.gianlucacosta.graphsj.App"
 
@@ -40,20 +33,10 @@ aurora {
         email = 'gianluca@gianlucacosta.info'
         url = 'http://gianlucacosta.info/'
     }
-
-    javaVersion {
-        major = 1
-        minor = 8
-        build = 0
-        update = 91
-    }
 }
 
 
-
 dependencies {
-    generatedCompile 'org.scala-lang:scala-library:2.11.8'
-
     compile 'org.scala-lang:scala-library:2.11.8'
 
     compile 'org.scala-lang:scala-xml:2.11.0-M4'
@@ -62,17 +45,5 @@ dependencies {
     compile 'javax.json:javax.json-api:1.0'
     compile 'org.glassfish:javax.json:1.0.4'
 
-    compile 'info.gianlucacosta.graphsj:graphsj-sdk:6.1'
-}
-
-
-
-moonLicense {
-    license = apache2
-
-    productInfo {
-        productName = 'GraphsJ'
-        inceptionYear = 2009
-        copyrightHolder = 'Gianluca Costa'
-    }
+    compile 'info.gianlucacosta.graphsj:graphsj-sdk:7.0.0-SNAPSHOT'
 }
