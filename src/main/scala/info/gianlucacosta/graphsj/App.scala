@@ -9,7 +9,7 @@ import info.gianlucacosta.graphsj.icons.MainIcon
 import info.gianlucacosta.graphsj.windows.main.MainWindowController
 import info.gianlucacosta.helios.apps.{AppInfo, AuroraAppInfo}
 import info.gianlucacosta.helios.desktop.DesktopUtils
-import info.gianlucacosta.helios.fx.apps.{AppBase, AppMain, SplashStage}
+import info.gianlucacosta.helios.fx.application.{AppBase, AppMain, SplashStage}
 
 import scalafx.application.Platform
 import scalafx.scene.Scene

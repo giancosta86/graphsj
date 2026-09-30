@@ -17,8 +17,8 @@ import info.gianlucacosta.eighthbridge.graphs.point2point.visual.{VisualGraph, V
 import info.gianlucacosta.graphsj._
 import info.gianlucacosta.helios.apps.AppInfo
 import info.gianlucacosta.helios.desktop.DesktopUtils
-import info.gianlucacosta.helios.fx.about.AboutBox
-import info.gianlucacosta.helios.fx.dialogs.FileChooserExtensions._
+import info.gianlucacosta.helios.fx.dialogs.about.AboutBox
+import info.gianlucacosta.helios.fx.Includes._
 import info.gianlucacosta.helios.fx.dialogs.{Alerts, InputDialogs}
 
 import scalafx.Includes._
@@ -113,19 +113,19 @@ class MainWindowController[V <: VisualVertex[V], L <: VisualLink[L], G <: Visual
         String.format("%s%s%s",
           appInfo.name,
 
-          workspace.documentFile.map(
+          workspace.documentFileOption.get.map(
             file => " - " + file.getName
           ).getOrElse(
             ""
           ),
 
-          if (workspace.modified) " *" else ""
+          if (workspace.modified.get) " *" else ""
         )
       }
     },
 
-      workspace.documentFileProperty,
-      workspace.modifiedProperty
+      workspace.documentFileOption,
+      workspace.modified
     )
 
     setupMenusAndToolbar()
@@ -280,7 +280,7 @@ class MainWindowController[V <: VisualVertex[V], L <: VisualLink[L], G <: Visual
 
 
     saveMenuItem.disable <==
-      (scenarioProperty === None) || running || (!workspace.modifiedProperty)
+      (scenarioProperty === None) || running || (!workspace.modified)
 
     bindButton(saveButton, saveMenuItem)
 
