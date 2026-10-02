@@ -17,8 +17,9 @@ import scalafx.scene.layout.BorderPane
 
 
 object App extends AppMain[App](classOf[App]) {
+  //TODO! Hardwire the current version here!
   val ScenariosApiUrl =
-    new URL("https://api.github.com/repos/giancosta86/GraphsJ-scenarios/releases/latest")
+    new URL("https://api.github.com/repos/giancosta86/graphsJ-scenarios/releases/latest")
 
   private val MajorVersion =
     ArtifactInfo.version.split('.').head
