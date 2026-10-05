@@ -6,13 +6,12 @@ import java.nio.file.Files
 import java.util.regex.Pattern
 import javafx.beans.Observable
 import javafx.stage.Stage
-import javax.json.{Json, JsonObject}
 
+import javax.json.{Json, JsonObject}
 import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.converters.ConversionException
 import com.thoughtworks.xstream.io.xml.StaxDriver
-import info.gianlucacosta.eighthbridge.fx.canvas.GraphCanvas
-import info.gianlucacosta.eighthbridge.graphs.point2point.visual.{VisualGraph, VisualLink, VisualVertex}
+import info.gianlucacosta.eighthbridge.fx.canvas.{GraphCanvas, VisualGraph, VisualLink, VisualVertex}
 import info.gianlucacosta.graphsj.{App, Scenario, ScenarioRepository}
 import info.gianlucacosta.helios.apps.AppInfo
 import info.gianlucacosta.helios.desktop.DesktopUtils

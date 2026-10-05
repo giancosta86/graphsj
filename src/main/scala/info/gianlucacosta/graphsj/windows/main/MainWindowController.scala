@@ -10,17 +10,15 @@ import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.scene.input.MouseEvent
 import javafx.stage.Stage
-import javax.imageio.ImageIO
 
-import info.gianlucacosta.eighthbridge.fx.canvas.GraphCanvas
-import info.gianlucacosta.eighthbridge.graphs.point2point.visual.{VisualGraph, VisualLink, VisualVertex}
+import javax.imageio.ImageIO
+import info.gianlucacosta.eighthbridge.fx.canvas.{GraphCanvas, VisualGraph, VisualLink, VisualVertex}
 import info.gianlucacosta.graphsj._
 import info.gianlucacosta.helios.apps.AppInfo
 import info.gianlucacosta.helios.desktop.DesktopUtils
 import info.gianlucacosta.helios.fx.dialogs.about.AboutBox
 import info.gianlucacosta.helios.fx.Includes._
 import info.gianlucacosta.helios.fx.dialogs.{Alerts, InputDialogs}
-
 import scalafx.Includes._
 import scalafx.application.Platform
 import scalafx.beans.property.{BooleanProperty, ObjectProperty}

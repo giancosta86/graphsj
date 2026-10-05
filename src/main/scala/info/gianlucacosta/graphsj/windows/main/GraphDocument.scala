@@ -1,6 +1,6 @@
 package info.gianlucacosta.graphsj.windows.main
 
-import info.gianlucacosta.eighthbridge.graphs.point2point.visual.{VisualGraph, VisualLink, VisualVertex}
+import info.gianlucacosta.eighthbridge.fx.canvas.{VisualGraph, VisualLink, VisualVertex}
 import info.gianlucacosta.graphsj.Scenario
 
 private case class GraphDocument[V <: VisualVertex, L <: VisualLink, G <: VisualGraph[V, L]]
