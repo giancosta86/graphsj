@@ -34,7 +34,7 @@ private object GraphWorkspace {
 }
 
 
-private class GraphWorkspace[V <: VisualVertex[V], L <: VisualLink[L], G <: VisualGraph[V, L, G]]
+private class GraphWorkspace[V <: VisualVertex, L <: VisualLink, G <: VisualGraph[V, L]]
 (
   appInfo: AppInfo,
   stage: Stage,

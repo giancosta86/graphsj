@@ -37,7 +37,7 @@ object MainWindowController {
 }
 
 
-class MainWindowController[V <: VisualVertex[V], L <: VisualLink[L], G <: VisualGraph[V, L, G]] {
+class MainWindowController[V <: VisualVertex, L <: VisualLink, G <: VisualGraph[V, L]] {
   private var aboutBox: AboutBox = _
 
   private var stage: Stage = _
