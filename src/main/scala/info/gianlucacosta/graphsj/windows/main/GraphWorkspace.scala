@@ -11,7 +11,7 @@ import javax.json.{Json, JsonObject}
 import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.converters.ConversionException
 import com.thoughtworks.xstream.io.xml.StaxDriver
-import info.gianlucacosta.eighthbridge.fx.canvas.{GraphCanvas, VisualGraph, VisualLink, VisualVertex}
+import info.gianlucacosta.eighthbridge.fx.{GraphCanvas, VisualGraph, VisualLink, VisualVertex}
 import info.gianlucacosta.graphsj.{App, Scenario, ScenarioRepository}
 import info.gianlucacosta.helios.apps.AppInfo
 import info.gianlucacosta.helios.desktop.DesktopUtils

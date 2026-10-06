@@ -12,7 +12,7 @@ import javafx.scene.input.MouseEvent
 import javafx.stage.Stage
 
 import javax.imageio.ImageIO
-import info.gianlucacosta.eighthbridge.fx.canvas.{GraphCanvas, VisualGraph, VisualLink, VisualVertex}
+import info.gianlucacosta.eighthbridge.fx.{GraphCanvas, VisualGraph, VisualLink, VisualVertex}
 import info.gianlucacosta.graphsj._
 import info.gianlucacosta.helios.apps.AppInfo
 import info.gianlucacosta.helios.desktop.DesktopUtils
