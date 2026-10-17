@@ -11,8 +11,9 @@ import javax.json.{Json, JsonObject}
 import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.converters.ConversionException
 import com.thoughtworks.xstream.io.xml.StaxDriver
-import info.gianlucacosta.eighthbridge.fx.{GraphCanvas, VisualGraph, VisualLink, VisualVertex}
-import info.gianlucacosta.graphsj.{App, Scenario, ScenarioRepository}
+import info.gianlucacosta.eighthbridge.fx.GraphCanvas
+import info.gianlucacosta.eighthbridge.fx.graph.{VisualGraph}
+import info.gianlucacosta.graphsj.{App, ScenarioRepository, windows}
 import info.gianlucacosta.helios.apps.AppInfo
 import info.gianlucacosta.helios.desktop.DesktopUtils
 import info.gianlucacosta.helios.fx.dialogs.{Alerts, BusyDialog, InputDialogs}
@@ -33,7 +34,7 @@ private object GraphWorkspace {
 }
 
 
-private class GraphWorkspace[V <: VisualVertex, L <: VisualLink, G <: VisualGraph[V, L]]
+private class GraphWorkspace
 (
   appInfo: AppInfo,
   stage: Stage,
@@ -71,12 +72,12 @@ private class GraphWorkspace[V <: VisualVertex, L <: VisualLink, G <: VisualGrap
 
 
   val scenarioProperty =
-    ObjectProperty[Option[Scenario[V, L, G]]](None)
+    ObjectProperty[Option[VisualScenario]](None)
 
-  def scenario: Option[Scenario[V, L, G]] =
+  def scenario: Option[VisualScenario] =
     scenarioProperty.get
 
-  private def scenario_=(newValue: Option[Scenario[V, L, G]]): Unit =
+  private def scenario_=(newValue: Option[VisualScenario]): Unit =
     scenarioProperty.set(newValue)
 
   scenarioProperty.addListener((observable: Observable) => {
@@ -90,12 +91,12 @@ private class GraphWorkspace[V <: VisualVertex, L <: VisualLink, G <: VisualGrap
 
 
   val designCanvasProperty =
-    ObjectProperty[Option[GraphCanvas[V, L, G]]](None)
+    ObjectProperty[Option[GraphCanvas]](None)
 
-  def designCanvas: Option[GraphCanvas[V, L, G]] =
+  def designCanvas: Option[GraphCanvas] =
     designCanvasProperty.get
 
-  def designCanvas_=(newValue: Option[GraphCanvas[V, L, G]]): Unit = {
+  def designCanvas_=(newValue: Option[GraphCanvas]): Unit = {
     designCanvasProperty.set(newValue)
   }
 
@@ -161,17 +162,21 @@ private class GraphWorkspace[V <: VisualVertex, L <: VisualLink, G <: VisualGrap
 
     scenarioFactoryOption.exists(scenarioFactory => {
       val newScenarioOption =
-        scenarioFactory.createScenario.asInstanceOf[Option[Scenario[V, L, G]]]
+        scenarioFactory.createScenario
 
       newScenarioOption.exists(newScenario => {
+        var visualScenario: VisualScenario =
+          newScenario.asInstanceOf[VisualScenario]
+
         val newDesignCanvas =
-          new GraphCanvas[V, L, G](
-            newScenario.createDesignController(),
-            newScenario.createDesignGraph()
+          new GraphCanvas(
+            visualScenario.createDesignController(),
+            visualScenario.createDesignGraph()
+              .asInstanceOf[VisualGraph]
           )
 
         scenario =
-          Some(newScenario)
+          Some(visualScenario)
 
         designCanvas =
           Some(newDesignCanvas)
@@ -197,15 +202,15 @@ private class GraphWorkspace[V <: VisualVertex, L <: VisualLink, G <: VisualGrap
           }
 
         val document =
-          loadedObject.asInstanceOf[GraphDocument[_, _, _]]
+          loadedObject.asInstanceOf[GraphDocument]
 
         scenario =
-          Some(document.scenario.asInstanceOf[Scenario[V, L, G]])
+          Some(document.scenario)
 
         designCanvas =
-          Some(new GraphCanvas[V, L, G](
-            document.scenario.asInstanceOf[Scenario[V, L, G]].createDesignController(),
-            document.designGraph.asInstanceOf[G]
+          Some(new GraphCanvas(
+            document.scenario.createDesignController(),
+            document.designGraph
           ))
       } finally {
         sourceReader.close()
@@ -238,9 +243,9 @@ private class GraphWorkspace[V <: VisualVertex, L <: VisualLink, G <: VisualGrap
 
   override protected def doSave(targetFile: File): Boolean = {
     val document =
-      GraphDocument[V, L, G](
+      GraphDocument(
         scenario.get,
-        designCanvas.get.graph
+        designCanvas.get.graph()
       )
 
     val targetWriter =

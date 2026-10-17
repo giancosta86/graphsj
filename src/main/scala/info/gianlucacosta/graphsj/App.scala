@@ -4,13 +4,11 @@ import java.io.File
 import java.net.URL
 import javafx.fxml.FXMLLoader
 import javafx.stage.Stage
-
 import info.gianlucacosta.graphsj.icons.MainIcon
 import info.gianlucacosta.graphsj.windows.main.MainWindowController
 import info.gianlucacosta.helios.apps.{AppInfo, AuroraAppInfo}
 import info.gianlucacosta.helios.desktop.DesktopUtils
 import info.gianlucacosta.helios.fx.application.{AppBase, AppMain, SplashStage}
-
 import scalafx.application.Platform
 import scalafx.scene.Scene
 import scalafx.scene.layout.BorderPane
@@ -51,7 +49,7 @@ class App extends AppBase(AuroraAppInfo(ArtifactInfo, MainIcon)) {
 
     val loader =
       new FXMLLoader(
-        classOf[MainWindowController[_, _, _]].getResource("MainWindow.fxml")
+        classOf[MainWindowController].getResource("MainWindow.fxml")
       )
 
 
@@ -60,7 +58,7 @@ class App extends AppBase(AuroraAppInfo(ArtifactInfo, MainIcon)) {
 
 
     val mainWindowController =
-      loader.getController.asInstanceOf[MainWindowController[_, _, _]]
+      loader.getController.asInstanceOf[MainWindowController]
 
 
     val scenarioRepository =

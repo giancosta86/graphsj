@@ -1,8 +1,9 @@
 package info.gianlucacosta.graphsj
 
+import info.gianlucacosta.graphsj.sdk.ScenarioFactory
+
 import java.io.File
 import java.lang.reflect.Modifier
-
 import org.reflections.Reflections
 import org.reflections.util.ConfigurationBuilder
 
@@ -38,7 +39,7 @@ class ScenarioRepository(baseDirectory: File) {
             new Reflections(configuration)
 
           reflections
-            .getSubTypesOf(classOf[ScenarioFactory[_, _, _]])
+            .getSubTypesOf(classOf[ScenarioFactory])
             .filter(scenarioFactoryClass =>
               !Modifier.isAbstract(scenarioFactoryClass.getModifiers) &&
                 !scenarioFactoryClass.isInterface

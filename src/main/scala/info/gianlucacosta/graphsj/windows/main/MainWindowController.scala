@@ -12,8 +12,10 @@ import javafx.scene.input.MouseEvent
 import javafx.stage.Stage
 
 import javax.imageio.ImageIO
-import info.gianlucacosta.eighthbridge.fx.{GraphCanvas, VisualGraph, VisualLink, VisualVertex}
-import info.gianlucacosta.graphsj._
+import info.gianlucacosta.eighthbridge.fx.GraphCanvas
+import info.gianlucacosta.eighthbridge.fx.graph.{VisualArc, VisualGraph, VisualVertex}
+import info.gianlucacosta.graphsj.sdk.{Algorithm, OutputConsole}
+import info.gianlucacosta.graphsj.{App, ScenarioRepository}
 import info.gianlucacosta.helios.apps.AppInfo
 import info.gianlucacosta.helios.desktop.DesktopUtils
 import info.gianlucacosta.helios.fx.dialogs.about.AboutBox
@@ -35,12 +37,12 @@ object MainWindowController {
 }
 
 
-class MainWindowController[V <: VisualVertex, L <: VisualLink, G <: VisualGraph[V, L]] {
+class MainWindowController {
   private var aboutBox: AboutBox = _
 
   private var stage: Stage = _
   private var appInfo: AppInfo = _
-  private var workspace: GraphWorkspace[V, L, G] = _
+  private var workspace: GraphWorkspace = _
 
   def scenarioRepository: ScenarioRepository =
     workspace.scenarioRepository
@@ -78,12 +80,12 @@ class MainWindowController[V <: VisualVertex, L <: VisualLink, G <: VisualGraph[
     }
 
     workspace =
-      new GraphWorkspace[V, L, G](appInfo, stage, scenarioRepository, scenarioFileChooser) {
+      new GraphWorkspace(appInfo, stage, scenarioRepository, scenarioFileChooser) {
         bindEvents()
 
         designCanvasProperty.addListener((observable: Observable) => {
           workspace.designCanvas.foreach(designCanvas => {
-            designCanvas.graphProperty.addListener((graphObservable: Observable) => {
+            designCanvas.graph.addListener((graphObservable: Observable) => {
               workspace.setModified()
             })
 
@@ -147,6 +149,7 @@ class MainWindowController[V <: VisualVertex, L <: VisualLink, G <: VisualGraph[
 
         algorithm =
           workspace.scenario.get.createAlgorithm()
+            .asInstanceOf[Algorithm[VisualVertex, VisualArc, VisualGraph]]
 
         stepIndex =
           0
@@ -168,14 +171,14 @@ class MainWindowController[V <: VisualVertex, L <: VisualLink, G <: VisualGraph[
 
 
   private val runtimeCanvasProperty =
-    ObjectProperty[Option[GraphCanvas[V, L, G]]](None)
+    ObjectProperty[Option[GraphCanvas]](None)
 
 
-  def runtimeCanvas: Option[GraphCanvas[V, L, G]] =
+  def runtimeCanvas: Option[GraphCanvas] =
     runtimeCanvasProperty.get
 
 
-  def runtimeCanvas(newValue: Option[GraphCanvas[V, L, G]]): Unit = {
+  def runtimeCanvas(newValue: Option[GraphCanvas]): Unit = {
     runtimeCanvasProperty.set(newValue)
   }
 
@@ -197,22 +200,22 @@ class MainWindowController[V <: VisualVertex, L <: VisualLink, G <: VisualGraph[
   })
 
 
-  private var algorithm: Algorithm[V, L, G] = _
+  private var algorithm: VisualAlgorithm = _
   private var stepIndex: Int = _
 
 
-  private def designGraph: G =
-    workspace.designCanvas.get.graph
+  private def designGraph: VisualGraph =
+    workspace.designCanvas.get.graph()
 
-  private def designGraph_=(newGraph: G): Unit =
-    workspace.designCanvas.get.graph = newGraph
+  private def designGraph_=(newGraph: VisualGraph): Unit =
+    workspace.designCanvas.get.graph() = newGraph
 
 
-  private def runtimeGraph: G =
-    runtimeCanvasProperty().get.graph
+  private def runtimeGraph: VisualGraph =
+    runtimeCanvasProperty().get.graph()
 
-  private def runtimeGraph_=(newGraph: G): Unit =
-    runtimeCanvasProperty().get.graph = newGraph
+  private def runtimeGraph_=(newGraph: VisualGraph): Unit =
+    runtimeCanvasProperty().get.graph() = newGraph
 
 
   private lazy val outputConsole: OutputConsole = new OutputConsole {
@@ -487,9 +490,9 @@ class MainWindowController[V <: VisualVertex, L <: VisualLink, G <: VisualGraph[
   def showScenarioSettings(): Unit = {
     workspace.scenario.get.showSettings(designGraph).foreach(newGraph =>
       workspace.designCanvas = Some(
-        new GraphCanvas[V, L, G](
+        new GraphCanvas(
           workspace.scenario.get.createDesignController(),
-          newGraph
+          newGraph.asInstanceOf[VisualGraph]
         )
       )
     )
@@ -542,7 +545,7 @@ class MainWindowController[V <: VisualVertex, L <: VisualLink, G <: VisualGraph[
       require(newGraph != null)
 
       runtimeGraph =
-        newGraph
+        newGraph.asInstanceOf[VisualGraph]
 
       if (canProceed) {
         stepIndex +=

@@ -1,14 +1,14 @@
 package info.gianlucacosta.graphsj
 
+import info.gianlucacosta.graphsj.windows.main.MainWindowController
+
 import java.nio.file.{Path, WatchEvent}
 import java.time.Duration
-
-import info.gianlucacosta.graphsj.windows.main.MainWindowController
 import info.gianlucacosta.helios.files.DirectoryWatcher
 
 
 private class ScenariosDirectoryWatcher(
-                                         mainWindowController: MainWindowController[_, _, _],
+                                         mainWindowController: MainWindowController,
                                          baseDirectory: Path
                                        ) extends DirectoryWatcher(
   baseDirectory,
