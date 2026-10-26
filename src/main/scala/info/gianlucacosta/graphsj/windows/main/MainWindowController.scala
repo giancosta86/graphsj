@@ -13,7 +13,7 @@ import javafx.stage.Stage
 
 import javax.imageio.ImageIO
 import info.gianlucacosta.eighthbridge.fx.GraphCanvas
-import info.gianlucacosta.eighthbridge.fx.graph.{VisualArc, VisualGraph, VisualVertex}
+import info.gianlucacosta.eighthbridge.fx.graph.{VisualLink, VisualGraph, VisualVertex}
 import info.gianlucacosta.graphsj.sdk.{Algorithm, OutputConsole}
 import info.gianlucacosta.graphsj.{App, ScenarioRepository}
 import info.gianlucacosta.helios.apps.AppInfo
@@ -149,7 +149,7 @@ class MainWindowController {
 
         algorithm =
           workspace.scenario.get.createAlgorithm()
-            .asInstanceOf[Algorithm[VisualVertex, VisualArc, VisualGraph]]
+            .asInstanceOf[Algorithm[VisualVertex, VisualLink, VisualGraph]]
 
         stepIndex =
           0
