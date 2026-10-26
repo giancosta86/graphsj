@@ -1,12 +1,12 @@
 package info.gianlucacosta.graphsj.windows
 
-import info.gianlucacosta.eighthbridge.fx.graph.{VisualArc, VisualGraph, VisualVertex}
+import info.gianlucacosta.eighthbridge.fx.graph.{VisualGraph, VisualLink, VisualVertex}
 import info.gianlucacosta.graphsj.sdk.{Algorithm, Scenario}
 
 package object main {
   type VisualScenario =
-    Scenario[VisualVertex, VisualArc, VisualGraph]
+    Scenario[VisualVertex, VisualLink, VisualGraph]
 
   type VisualAlgorithm =
-    Algorithm[VisualVertex, VisualArc, VisualGraph]
+    Algorithm[VisualVertex, VisualLink, VisualGraph]
 }
