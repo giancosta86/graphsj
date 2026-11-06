@@ -12,7 +12,8 @@ import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.converters.ConversionException
 import com.thoughtworks.xstream.io.xml.StaxDriver
 import info.gianlucacosta.eighthbridge.fx.GraphCanvas
-import info.gianlucacosta.eighthbridge.fx.graph.{VisualGraph}
+import info.gianlucacosta.eighthbridge.fx.graph.VisualGraph
+import info.gianlucacosta.graphsj.sdk.Scenario
 import info.gianlucacosta.graphsj.{App, ScenarioRepository, windows}
 import info.gianlucacosta.helios.apps.AppInfo
 import info.gianlucacosta.helios.desktop.DesktopUtils
@@ -72,12 +73,12 @@ private class GraphWorkspace
 
 
   val scenarioProperty =
-    ObjectProperty[Option[VisualScenario]](None)
+    ObjectProperty[Option[Scenario]](None)
 
-  def scenario: Option[VisualScenario] =
+  def scenario: Option[Scenario] =
     scenarioProperty.get
 
-  private def scenario_=(newValue: Option[VisualScenario]): Unit =
+  private def scenario_=(newValue: Option[Scenario]): Unit =
     scenarioProperty.set(newValue)
 
   scenarioProperty.addListener((observable: Observable) => {
@@ -165,18 +166,15 @@ private class GraphWorkspace
         scenarioFactory.createScenario
 
       newScenarioOption.exists(newScenario => {
-        var visualScenario: VisualScenario =
-          newScenario.asInstanceOf[VisualScenario]
-
         val newDesignCanvas =
           new GraphCanvas(
-            visualScenario.createDesignController(),
-            visualScenario.createDesignGraph()
+            newScenario.createDesignController(),
+            newScenario.createDesignGraph()
               .asInstanceOf[VisualGraph]
           )
 
         scenario =
-          Some(visualScenario)
+          Some(newScenario)
 
         designCanvas =
           Some(newDesignCanvas)

@@ -149,7 +149,6 @@ class MainWindowController {
 
         algorithm =
           workspace.scenario.get.createAlgorithm()
-            .asInstanceOf[Algorithm[VisualVertex, VisualLink, VisualGraph]]
 
         stepIndex =
           0
@@ -200,7 +199,7 @@ class MainWindowController {
   })
 
 
-  private var algorithm: VisualAlgorithm = _
+  private var algorithm: Algorithm = _
   private var stepIndex: Int = _
 
 
