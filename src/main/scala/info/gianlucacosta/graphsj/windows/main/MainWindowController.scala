@@ -154,9 +154,14 @@ class MainWindowController {
           0
 
         runtimeCanvasProperty() =
-          Some(new GraphCanvas(
-            workspace.scenario.get.createRuntimeController(),
-            designGraph)
+          Some(
+            new GraphCanvas {
+              controller() =
+                workspace.scenario.get.createRuntimeController()
+
+              graph() =
+                designGraph
+            }
           )
 
         graphCanvasPane.content =
@@ -489,10 +494,16 @@ class MainWindowController {
   def showScenarioSettings(): Unit = {
     workspace.scenario.get.showSettings(designGraph).foreach(newGraph =>
       workspace.designCanvas = Some(
-        new GraphCanvas(
-          workspace.scenario.get.createDesignController(),
-          newGraph.asInstanceOf[VisualGraph]
-        )
+        new GraphCanvas {
+          controller() =
+            workspace
+              .scenario
+              .get
+              .createDesignController()
+
+          graph() =
+            newGraph
+        }
       )
     )
   }

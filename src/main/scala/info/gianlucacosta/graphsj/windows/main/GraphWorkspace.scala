@@ -167,11 +167,13 @@ private class GraphWorkspace
 
       newScenarioOption.exists(newScenario => {
         val newDesignCanvas =
-          new GraphCanvas(
-            newScenario.createDesignController(),
-            newScenario.createDesignGraph()
-              .asInstanceOf[VisualGraph]
-          )
+          new GraphCanvas {
+            controller() =
+              newScenario.createDesignController()
+
+            graph() =
+              newScenario.createDesignGraph()
+          }
 
         scenario =
           Some(newScenario)
@@ -206,10 +208,15 @@ private class GraphWorkspace
           Some(document.scenario)
 
         designCanvas =
-          Some(new GraphCanvas(
-            document.scenario.createDesignController(),
-            document.designGraph
-          ))
+          Some(
+            new GraphCanvas {
+              controller() =
+                document.scenario.createDesignController()
+
+              graph() =
+                document.designGraph
+            }
+          )
       } finally {
         sourceReader.close()
       }
