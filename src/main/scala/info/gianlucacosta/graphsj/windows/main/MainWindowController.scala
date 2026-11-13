@@ -13,7 +13,8 @@ import javafx.stage.Stage
 
 import javax.imageio.ImageIO
 import info.gianlucacosta.eighthbridge.fx.GraphCanvas
-import info.gianlucacosta.eighthbridge.fx.graph.{VisualLink, VisualGraph, VisualVertex}
+import info.gianlucacosta.eighthbridge.fx.graph.{VisualGraph, VisualLink, VisualVertex}
+import info.gianlucacosta.graphsj.sdk.ouputconsoles.TextAreaOutputConsole
 import info.gianlucacosta.graphsj.sdk.{Algorithm, OutputConsole}
 import info.gianlucacosta.graphsj.{App, ScenarioRepository}
 import info.gianlucacosta.helios.apps.AppInfo
@@ -221,21 +222,8 @@ class MainWindowController {
   private def runtimeGraph_=(newGraph: VisualGraph): Unit =
     runtimeCanvasProperty().get.graph() = newGraph
 
-
-  private lazy val outputConsole: OutputConsole = new OutputConsole {
-    override def write(value: Any): Unit = {
-      consoleArea.appendText(value.toString)
-    }
-
-    override def writeln(value: Any): Unit = {
-      consoleArea.appendText(value.toString + "\n")
-    }
-
-    override def writeln(): Unit = {
-      consoleArea.appendText("\n")
-    }
-  }
-
+  private lazy val outputConsole: OutputConsole =
+    new TextAreaOutputConsole(consoleArea)
 
   private lazy val consoleFileChooser: FileChooser = {
     val fileChooser =
