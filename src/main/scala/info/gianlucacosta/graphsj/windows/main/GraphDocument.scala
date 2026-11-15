@@ -1,6 +1,6 @@
 package info.gianlucacosta.graphsj.windows.main
 
-import info.gianlucacosta.eighthbridge.fx.graph.VisualGraph
+import info.gianlucacosta.eighthbridge.fx.VisualGraph
 import info.gianlucacosta.graphsj.sdk.Scenario
 
 

@@ -12,7 +12,7 @@ import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.converters.ConversionException
 import com.thoughtworks.xstream.io.xml.StaxDriver
 import info.gianlucacosta.eighthbridge.fx.GraphCanvas
-import info.gianlucacosta.eighthbridge.fx.graph.VisualGraph
+import info.gianlucacosta.eighthbridge.fx.VisualGraph
 import info.gianlucacosta.graphsj.sdk.Scenario
 import info.gianlucacosta.graphsj.{App, ScenarioRepository, windows}
 import info.gianlucacosta.helios.apps.AppInfo
