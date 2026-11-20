@@ -173,6 +173,12 @@ private class GraphWorkspace
 
             graph() =
               newScenario.createDesignGraph()
+
+            minWidth =
+              800
+
+            minHeight =
+              600
           }
 
         scenario =
