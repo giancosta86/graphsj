@@ -1,6 +1,6 @@
 package info.gianlucacosta.graphsj.windows.main
 
-private trait RunState
+private sealed trait RunState
 
 private case object NotRunning extends RunState
 
