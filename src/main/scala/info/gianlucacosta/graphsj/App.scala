@@ -22,10 +22,8 @@ object App extends AppMain[App](classOf[App]) {
   private val MajorVersion =
     ArtifactInfo.version.split('.').head
 
-
   val DefaultExtension =
     s".gj${MajorVersion}"
-
 
   val ScenariosDirectory = new File(
     DesktopUtils.homeDirectory.get,
@@ -52,35 +50,28 @@ class App extends AppBase(AuroraAppInfo(ArtifactInfo, MainIcon)) {
         classOf[MainWindowController].getResource("MainWindow.fxml")
       )
 
-
     val rootComponent: javafx.scene.layout.BorderPane =
       loader.load()
-
 
     val mainWindowController =
       loader.getController.asInstanceOf[MainWindowController]
 
-
     val scenarioRepository =
       new ScenarioRepository(App.ScenariosDirectory)
 
-
     mainWindowController.setup(primaryStage, appInfo, scenarioRepository)
-
 
     new ScenariosDirectoryWatcher(mainWindowController, App.ScenariosDirectory.toPath) {
       start()
     }
-
 
     val scene = new Scene {
       root =
         new BorderPane(rootComponent)
     }
 
-
     Platform.runLater {
-      primaryStage.setMaximized(true)
+      //TODO! primaryStage.setMaximized(true)
 
       primaryStage.setScene(scene)
     }
