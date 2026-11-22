@@ -5,4 +5,7 @@ import info.gianlucacosta.graphsj.sdk.Scenario
 
 
 private case class GraphDocument
-(scenario: Scenario, designGraph: VisualGraph)
+(
+  scenario: Scenario,
+  designGraph: VisualGraph
+)
