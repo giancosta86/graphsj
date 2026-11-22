@@ -17,5 +17,4 @@ private class ScenariosDirectoryWatcher(
   override def onEvents(events: List[WatchEvent[_]]): Unit =
     mainWindowController.scenarioRepository =
       new ScenarioRepository(baseDirectory.toFile)
-
 }

@@ -11,22 +11,23 @@ import scala.collection.JavaConversions._
 import scala.reflect.internal.util.ScalaClassLoader.URLClassLoader
 
 class ScenarioRepository(baseDirectory: File) {
-  private val jarFiles: Array[File] =
+  private val jarFiles: List[File] =
     if (baseDirectory.isDirectory)
       baseDirectory
         .listFiles()
-        .filter(_.getName.toLowerCase.endsWith(".jar"))
+        .filter(
+          _.getName.toLowerCase.endsWith(".jar")
+        )
+        .toList
     else
-      Array[File]()
-
+      Nil
 
   val scenariosClassLoader = new URLClassLoader(
     jarFiles.map(_.toURI.toURL),
     getClass.getClassLoader
   )
 
-
-  val scenarioFactories =
+  val scenarioFactories: List[ScenarioFactory] =
     jarFiles
       .flatMap(jarFile =>
         try {
