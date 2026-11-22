@@ -84,8 +84,8 @@ class MainWindowController {
       new GraphWorkspace(appInfo, stage, scenarioRepository, scenarioFileChooser) {
         bindEvents()
 
-        designCanvasProperty.addListener((observable: Observable) => {
-          workspace.designCanvas.foreach(designCanvas => {
+        designCanvas.onInvalidate {
+          workspace.designCanvas().foreach(designCanvas => {
             designCanvas.graph.addListener((graphObservable: Observable) => {
               workspace.setModified()
             })
@@ -105,7 +105,7 @@ class MainWindowController {
           })
 
           ()
-        })
+        }
       }
 
 
@@ -149,7 +149,7 @@ class MainWindowController {
         consoleArea.clear()
 
         algorithm =
-          workspace.scenario.get.createAlgorithm()
+          workspace.scenario().get.createAlgorithm()
 
         stepIndex =
           0
@@ -158,7 +158,7 @@ class MainWindowController {
           Some(
             new GraphCanvas {
               controller() =
-                workspace.scenario.get.createRuntimeController()
+                workspace.scenario().get.createRuntimeController()
 
               graph() =
                 designGraph
@@ -169,7 +169,7 @@ class MainWindowController {
           runtimeCanvas.get
       } else {
         graphCanvasPane.content =
-          workspace.designCanvas.get
+          workspace.designCanvas().get
       }
     }
   })
@@ -210,10 +210,10 @@ class MainWindowController {
 
 
   private def designGraph: VisualGraph =
-    workspace.designCanvas.get.graph()
+    workspace.designCanvas().get.graph()
 
   private def designGraph_=(newGraph: VisualGraph): Unit =
-    workspace.designCanvas.get.graph() = newGraph
+    workspace.designCanvas().get.graph() = newGraph
 
 
   private def runtimeGraph: VisualGraph =
@@ -255,9 +255,9 @@ class MainWindowController {
   }
 
 
-  private def setupMenusAndToolbar() {
+  private def setupMenusAndToolbar(): Unit = {
     val scenarioProperty =
-      workspace.scenarioProperty
+      workspace.scenario
 
 
     newMenuItem.disable <==
@@ -325,7 +325,7 @@ class MainWindowController {
   }
 
 
-  private def bindButton(button: Button, menuItem: MenuItem) {
+  private def bindButton(button: Button, menuItem: MenuItem): Unit = {
     val buttonId =
       button.id()
 
@@ -377,7 +377,7 @@ class MainWindowController {
   }
 
 
-  def openScenario() {
+  def openScenario(): Unit = {
     workspace.openDocument()
   }
 
@@ -408,7 +408,7 @@ class MainWindowController {
             null
           )
         else
-          workspace.designCanvas.get.snapshot(
+          workspace.designCanvas().get.snapshot(
             new SnapshotParameters(),
             null
           )
@@ -469,23 +469,23 @@ class MainWindowController {
 
   def showScenarioName(): Unit = {
     Alerts.showInfo(
-      workspace.scenario.get.name,
+      workspace.scenario().get.name,
       "Scenario name"
     )
   }
 
   def showScenarioHelp(): Unit = {
-    workspace.scenario.get.showHelp()
+    workspace.scenario().get.showHelp()
   }
 
 
   def showScenarioSettings(): Unit = {
-    workspace.scenario.get.showSettings(designGraph).foreach(newGraph =>
-      workspace.designCanvas = Some(
+    workspace.scenario().get.showSettings(designGraph).foreach(newGraph =>
+      workspace.designCanvas() = Some(
         new GraphCanvas {
           controller() =
             workspace
-              .scenario
+              .scenario()
               .get
               .createDesignController()
 
@@ -505,7 +505,7 @@ class MainWindowController {
       0
 
     val runStepsBeforePausing =
-      workspace.scenario.get.runStepsBeforePausing
+      workspace.scenario().get.runStepsBeforePausing
 
 
     while (internalRunStep()) {
@@ -543,7 +543,7 @@ class MainWindowController {
       require(newGraph != null)
 
       runtimeGraph =
-        newGraph.asInstanceOf[VisualGraph]
+        newGraph
 
       if (canProceed) {
         stepIndex +=

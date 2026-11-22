@@ -28,16 +28,20 @@ import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.{Alert, ButtonType}
 import scalafx.stage.FileChooser
 
-
 private object GraphWorkspace {
   private val PredefinedScenariosJarFileNameRegex =
     Pattern.compile(raw"graphsj-scenarios-\d+(?:[\d\.]+)\.jar")
-}
 
+  private val MinCanvasWidth: Double =
+    800
+
+  private val MinCanvasHeight: Double =
+    600
+}
 
 private class GraphWorkspace
 (
-  appInfo: AppInfo,
+  appInfo: AppInfo, //TODO! Revise the AppInfo system in Helios-core/Helios-fx
   stage: Stage,
   initialScenarioRepository: ScenarioRepository,
   documentFileChooser: FileChooser
@@ -47,7 +51,6 @@ private class GraphWorkspace
 
   private var _scenarioRepository: ScenarioRepository = _
   private var xstream: XStream = _
-
 
   def scenarioRepository: ScenarioRepository = {
     scenarioRepositoryLock.synchronized {
@@ -67,50 +70,32 @@ private class GraphWorkspace
     }
   }
 
-
   scenarioRepository =
     initialScenarioRepository
 
-
-  val scenarioProperty =
+  val scenario =
     ObjectProperty[Option[Scenario]](None)
 
-  def scenario: Option[Scenario] =
-    scenarioProperty.get
 
-  private def scenario_=(newValue: Option[Scenario]): Unit =
-    scenarioProperty.set(newValue)
-
-  scenarioProperty.addListener((observable: Observable) => {
-    scenarioProperty().foreach(scenario => {
+  scenario.onInvalidate {
+    scenario().foreach(scenario => {
       val stylesheets =
         MainWindowController.AppStylesheet.toExternalForm :: scenario.stylesheets
 
       stage.scene().getStylesheets.setAll(stylesheets: _*)
     })
-  })
-
-
-  val designCanvasProperty =
-    ObjectProperty[Option[GraphCanvas]](None)
-
-  def designCanvas: Option[GraphCanvas] =
-    designCanvasProperty.get
-
-  def designCanvas_=(newValue: Option[GraphCanvas]): Unit = {
-    designCanvasProperty.set(newValue)
   }
 
+  val designCanvas =
+    ObjectProperty[Option[GraphCanvas]](None)
 
   override protected def doNew(): Boolean = {
     if (scenarioRepository.scenarioFactories.isEmpty) {
       val installPredefinedScenariosButton =
         new ButtonType("Install predefined scenarios")
 
-
       val showScenariosDirectoryButton =
         new ButtonType("Show scenarios directory")
-
 
       val noScenariosAlert = new Alert(AlertType.Confirmation) {
         initOwner(stage)
@@ -124,7 +109,6 @@ private class GraphWorkspace
             + "you can download one or more .jar files providing scenarios and copy them "
             + "to the scenarios directory."
           )
-
 
         buttonTypes = List(
           installPredefinedScenariosButton,
@@ -153,7 +137,6 @@ private class GraphWorkspace
       return false
     }
 
-
     val scenarioFactoryOption =
       InputDialogs.askForItem(
         "Scenario:",
@@ -175,23 +158,22 @@ private class GraphWorkspace
               newScenario.createDesignGraph()
 
             minWidth =
-              800
+              GraphWorkspace.MinCanvasWidth
 
             minHeight =
-              600
+              GraphWorkspace.MinCanvasHeight
           }
 
-        scenario =
+        scenario() =
           Some(newScenario)
 
-        designCanvas =
+        designCanvas() =
           Some(newDesignCanvas)
 
         true
       })
     })
   }
-
 
   override protected def doOpen(sourceFile: File): Boolean = {
     try {
@@ -210,10 +192,10 @@ private class GraphWorkspace
         val document =
           loadedObject.asInstanceOf[GraphDocument]
 
-        scenario =
+        scenario() =
           Some(document.scenario)
 
-        designCanvas =
+        designCanvas() =
           Some(
             new GraphCanvas {
               controller() =
@@ -221,12 +203,17 @@ private class GraphWorkspace
 
               graph() =
                 document.designGraph
+
+              minWidth =
+                GraphWorkspace.MinCanvasWidth
+
+              minHeight =
+                GraphWorkspace.MinCanvasHeight
             }
           )
       } finally {
         sourceReader.close()
       }
-
     } catch {
       case ex: ConversionException =>
         val lastColonIndex =
@@ -251,12 +238,11 @@ private class GraphWorkspace
     true
   }
 
-
   override protected def doSave(targetFile: File): Boolean = {
     val document =
       GraphDocument(
-        scenario.get,
-        designCanvas.get.graph()
+        scenario().get,
+        designCanvas().get.graph()
       )
 
     val targetWriter =
@@ -275,7 +261,6 @@ private class GraphWorkspace
 
     true
   }
-
 
   def installPredefinedScenarios(): Unit = {
     App.ensureScenariosDirectory()
@@ -303,7 +288,6 @@ private class GraphWorkspace
           return
         }
 
-
         require(
           existingScenariosJarFile.get.delete(),
           s"Cannot delete the predefined scenarios file:\n'${existingScenariosJarFile.get.getAbsolutePath}'"
@@ -324,11 +308,9 @@ private class GraphWorkspace
     }
   }
 
-
   private def downloadPredefinedScenariosJar(): Unit = {
     val scenariosApiJsonReader =
       Json.createReader(App.ScenariosApiUrl.openStream())
-
 
     try {
       val scenariosApiJson =
@@ -360,7 +342,6 @@ private class GraphWorkspace
           val sourceStream =
             sourceUrl.openStream()
 
-
           try {
             Files.copy(sourceStream, targetFile.toPath)
           } finally {
@@ -376,7 +357,6 @@ private class GraphWorkspace
       scenariosApiJsonReader.close()
     }
   }
-
 
   def showScenariosDirectory(): Unit = {
     try {
