@@ -18,6 +18,14 @@
 
     <properties>
         <mainClass>info.gianlucacosta.graphsj.App</mainClass>
+
+        <artifactInfoDirectory>info/gianlucacosta/graphsj</artifactInfoDirectory>
+
+        <appName>GraphsJ</appName>
+        <copyrightYears>2009-2026</copyrightYears>
+        <copyrightHolder>Gianluca Costa</copyrightHolder>
+        <license>MIT</license>
+        <website>https://github.com/giancosta86/graphsj</website>
     </properties>
 
     <dependencies>

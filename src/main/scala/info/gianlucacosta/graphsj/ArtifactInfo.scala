@@ -1,20 +1,42 @@
 package info.gianlucacosta.graphsj
 
-//TODO! Generate this!
-object ArtifactInfo {
-  val name = "GraphsJ"
+import info.gianlucacosta.graphsj.ArtifactInfo.getClass
 
-  val version = "7.0.0-SNAPSHOT"
+import java.util.Properties
 
-  val title = s"${name} ${version}"
+//TODO! Move this to Helios-core
+// !
+abstract class ArtifactInfoReader {
+  private val properties =
+    new Properties() {
+      load(
+        getClass.getResourceAsStream("ArtifactInfo.properties")
+      )
+    }
 
-  val copyrightYears = "2009-2026"
+  val name: String =
+    properties.getProperty("name")
 
-  val copyrightHolder = "Gianluca Costa"
+  val version: String =
+    properties.getProperty("version")
 
-  val license = "MIT"
+  val title: String =
+    s"${name} ${version}"
 
-  val website = "https://github.com/giancosta86/graphsj"
+  val copyrightYears: String =
+    properties.getProperty("copyrightYears")
 
-  val release = false
+  val copyrightHolder: String =
+    properties.getProperty("copyrightHolder")
+
+  val license: String =
+    properties.getProperty("license")
+
+  val website: String =
+    properties.getProperty("website")
+
+  val release: Boolean =
+    !version.contains("SNAPSHOT")
 }
+
+object ArtifactInfo extends ArtifactInfoReader
