@@ -45,7 +45,7 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
           val runtimeGraph: RuntimeGraph =
             createRuntimeGraph(graph.asInstanceOf[DesignGraph])
 
-          //TODO! checkRequirements(runtimeGraph)
+          checkRequirements(runtimeGraph)
 
           onInit(runtimeGraph, console)
 
@@ -71,7 +71,7 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
     )
 
     require(
-      graph.isolatedVertexes.nonEmpty,
+      graph.isolatedVertexes.isEmpty,
       "The graph must not have isolated vertexes!"
     )
   }
