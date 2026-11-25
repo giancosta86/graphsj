@@ -1,0 +1,40 @@
+/*
+ * PARTIAL SOLUTION
+ */
+
+.link.partialSolution .line {
+    -fx-stroke: #ffd88d;
+}
+
+.link.partialSolution .handle {
+    -fx-stroke: #ffd88d;
+}
+
+.link.partialSolution:selected .line {
+    -fx-stroke: orange;
+}
+
+.link.partialSolution:selected .handle {
+    -fx-stroke: orange;
+}
+
+
+/*
+ * FULL SOLUTION
+ */
+
+.link.fullSolution .line {
+    -fx-stroke: #86f699;
+}
+
+.link.fullSolution .handle {
+    -fx-stroke: #86f699;
+}
+
+.link.fullSolution:selected .line {
+    -fx-stroke: #18ab00;
+}
+
+.link.fullSolution:selected .handle {
+    -fx-fill: #18ab00;
+}

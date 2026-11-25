@@ -1,5 +1,6 @@
 package info.gianlucacosta.graphsj
 
+import info.gianlucacosta.graphsj.scenarios.prim.PrimScenarioFactory
 import info.gianlucacosta.graphsj.sdk.ScenarioFactory
 
 import java.io.File
@@ -11,7 +12,8 @@ import scala.collection.JavaConversions._
 import scala.reflect.internal.util.ScalaClassLoader.URLClassLoader
 
 class ScenarioRepository(baseDirectory: File) {
-  private val jarFiles: List[File] =
+  //TODO!
+  /*private val jarFiles: List[File] =
     if (baseDirectory.isDirectory)
       baseDirectory
         .listFiles()
@@ -55,4 +57,13 @@ class ScenarioRepository(baseDirectory: File) {
         }
       )
       .sortBy(_.scenarioName)
+   */
+
+  val scenariosClassLoader: ClassLoader =
+    getClass.getClassLoader
+
+  val scenarioFactories: List[ScenarioFactory] =
+    List(
+      new PrimScenarioFactory
+    )
 }
