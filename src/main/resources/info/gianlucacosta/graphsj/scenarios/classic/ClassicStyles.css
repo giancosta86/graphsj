@@ -2,20 +2,40 @@
  * PARTIAL SOLUTION
  */
 
+.vertex.partialSolution .label {
+    -fx-background-color: #f9cffd;
+}
+
+.vertex.partialSolution .ellipse {
+    -fx-fill: #f9cffd;
+}
+
 .link.partialSolution .line {
-    -fx-stroke: #ffd88d;
+    -fx-stroke: #f9cffd;
 }
 
 .link.partialSolution .handle {
-    -fx-stroke: #ffd88d;
+    -fx-stroke: #f9cffd;
+}
+
+/*
+ * PARTIAL SOLUTION - SELECTED
+ */
+
+.vertex.partialSolution:selected .label {
+    -fx-background-color: #c095fb;
+}
+
+.vertex.partialSolution:selected .ellipse {
+    -fx-fill: #c095fb;
 }
 
 .link.partialSolution:selected .line {
-    -fx-stroke: orange;
+    -fx-stroke: #c095fb;
 }
 
 .link.partialSolution:selected .handle {
-    -fx-stroke: orange;
+    -fx-stroke: #c095fb;
 }
 
 
@@ -23,18 +43,39 @@
  * FULL SOLUTION
  */
 
+.vertex.fullSolution .label {
+    -fx-background-color: #9effae;
+}
+
+.vertex.fullSolution .ellipse {
+    -fx-fill: #9effae;
+}
+
 .link.fullSolution .line {
-    -fx-stroke: #86f699;
+    -fx-stroke: #9effae;
 }
 
 .link.fullSolution .handle {
-    -fx-stroke: #86f699;
+    -fx-stroke: #9effae;
+}
+
+
+/*
+ * FULL SOLUTION - SELECTED
+ */
+
+.vertex.fullSolution:selected .label {
+    -fx-background-color: #4af63d;
+}
+
+.vertex.fullSolution:selected .ellipse {
+    -fx-fill: #4af63d;
 }
 
 .link.fullSolution:selected .line {
-    -fx-stroke: #18ab00;
+    -fx-stroke: #4af63d;
 }
 
 .link.fullSolution:selected .handle {
-    -fx-fill: #18ab00;
+    -fx-fill: #4af63d;
 }
