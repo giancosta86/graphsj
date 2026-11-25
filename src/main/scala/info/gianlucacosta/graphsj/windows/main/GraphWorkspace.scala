@@ -32,10 +32,11 @@ private object GraphWorkspace {
   private val PredefinedScenariosJarFileNameRegex =
     Pattern.compile(raw"graphsj-scenarios-\d+(?:[\d\.]+)\.jar")
 
-  private val MinCanvasWidth: Double =
+  //TODO! Replace these with a custom canvas!
+  val MinCanvasWidth: Double =
     800
 
-  private val MinCanvasHeight: Double =
+  val MinCanvasHeight: Double =
     600
 }
 

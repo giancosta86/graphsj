@@ -162,6 +162,12 @@ class MainWindowController {
 
               graph() =
                 designGraph
+
+              minWidth =
+                GraphWorkspace.MinCanvasWidth
+
+              minHeight =
+                GraphWorkspace.MinCanvasHeight
             }
           )
 
