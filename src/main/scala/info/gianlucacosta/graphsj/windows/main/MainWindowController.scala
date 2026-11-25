@@ -225,8 +225,12 @@ class MainWindowController {
   private def runtimeGraph: VisualGraph =
     runtimeCanvasProperty().get.graph()
 
-  private def runtimeGraph_=(newGraph: VisualGraph): Unit =
-    runtimeCanvasProperty().get.graph() = newGraph
+  private def runtimeGraph_=(newGraph: VisualGraph): Unit = {
+    runtimeCanvasProperty().get.graph() =
+      newGraph
+
+    runtimeCanvasProperty().get.fullRender()
+  }
 
   private lazy val outputConsole: OutputConsole =
     new TextAreaOutputConsole(consoleArea)
