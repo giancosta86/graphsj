@@ -12,39 +12,30 @@ import info.gianlucacosta.graphsj.sdk.{Algorithm, OutputConsole}
 import info.gianlucacosta.helios.fx.dialogs.InputDialogs
 
 abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorithm {
-  type DesignVertex <:
+  type DesignV <:
     ClassicDesignVertex
 
-  type DesignLink <:
+  type DesignL <:
     ClassicDesignLink
 
-  type DesignGraph =
-    Graph[DesignVertex, DesignLink]
+  type DesignG =
+    Graph[DesignV, DesignL]
 
-  type RuntimeVertex <:
+  type V <:
     ClassicRuntimeVertex
 
-  type RuntimeLink <:
+  type L <:
     ClassicRuntimeLink
 
-  type RuntimeGraph =
-    Graph[RuntimeVertex, RuntimeLink]
-
-  protected final type V =
-    RuntimeVertex
-
-  protected final type L =
-    RuntimeLink
-
-  protected final type G =
-    RuntimeGraph
+  type G =
+    Graph[V, L]
 
   override def runStep(stepIndex: Int, graph: VisualGraph, console: OutputConsole): (VisualGraph, Boolean) = {
     val (nextGraph, shouldGoOn) =
       stepIndex match {
         case 0 =>
-          val runtimeGraph: RuntimeGraph =
-            createRuntimeGraph(graph.asInstanceOf[DesignGraph])
+          val runtimeGraph: G =
+            createRuntimeGraph(graph.asInstanceOf[DesignG])
 
           checkRequirements(runtimeGraph)
 
@@ -85,7 +76,7 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
           }
 
           val (postStepGraph, shouldGoOn) =
-            onMainStep(stepIndex, graph.asInstanceOf[RuntimeGraph], console)
+            onMainStep(stepIndex, graph.asInstanceOf[G], console)
 
           if (verbose) {
             val virtualConsole =
@@ -109,7 +100,7 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
       (nextGraph.asInstanceOf[VisualGraph], true)
     } else {
       val finalGraph =
-        onExpectedEnd(stepIndex, graph.asInstanceOf[RuntimeGraph], console)
+        onExpectedEnd(stepIndex, graph.asInstanceOf[G], console)
 
       val virtualConsole =
         new BufferedOutputConsole
@@ -127,7 +118,7 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
     }
   }
 
-  protected def checkRequirements(graph: RuntimeGraph): Unit = {
+  protected def checkRequirements(graph: G): Unit = {
     require(
       graph.nonEmpty,
       "The graph cannot be empty!"
@@ -148,16 +139,16 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
 
   protected def printConclusion(graph: G, console: OutputConsole): Unit = {}
 
-  protected def createRuntimeGraph(designGraph: DesignGraph): RuntimeGraph = {
-    var runtimeGraph: RuntimeGraph = (
+  protected def createRuntimeGraph(designGraph: DesignG): G = {
+    var runtimeGraph: G = (
       if (designGraph.isDirected)
         Graph.createDirected()
       else
         Graph.createUndirected()
-      ).asInstanceOf[RuntimeGraph]
+      ).asInstanceOf[G]
 
-    var runtimeVertexByDesignVertex: Map[DesignVertex, RuntimeVertex] =
-      Map[DesignVertex, RuntimeVertex]()
+    var runtimeVertexByDesignVertex: Map[DesignV, V] =
+      Map[DesignV, V]()
 
     designGraph.vertexes.foreach(designVertex => {
       val runtimeVertex =
@@ -174,7 +165,7 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
     })
 
     designGraph.links.foreach(designLink => {
-      val (firstDesignAnchor, secondDesignAnchor): (DesignVertex, DesignVertex) =
+      val (firstDesignAnchor, secondDesignAnchor): (DesignV, DesignV) =
         designGraph.anchorsByLink(designLink).toPair
 
       val runtimeAnchors =
@@ -183,7 +174,7 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
           runtimeVertexByDesignVertex(secondDesignAnchor)
         )
 
-      val runtimeLink: RuntimeLink =
+      val runtimeLink: L =
         copyLinkFacets(
           designLink,
           createRuntimeLink(designLink)
@@ -196,102 +187,102 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
     runtimeGraph
   }
 
-  protected def createRuntimeVertex(designVertex: DesignVertex): RuntimeVertex
+  protected def createRuntimeVertex(designVertex: DesignV): V
 
-  protected def copyVertexFacets(designVertex: DesignVertex, runtimeVertex: RuntimeVertex): RuntimeVertex = {
-    var result: RuntimeVertex =
+  protected def copyVertexFacets(designVertex: DesignV, runtimeVertex: V): V = {
+    var result: V =
       runtimeVertex
 
     Facet.as[HasCenterSettable](result).foreach(facetedRuntimeVertex =>
       Facet.as[HasCenter](designVertex).foreach(facetedDesignVertex => {
         result =
-          facetedRuntimeVertex.setCenter(facetedDesignVertex.center).asInstanceOf[RuntimeVertex]
+          facetedRuntimeVertex.setCenter(facetedDesignVertex.center).asInstanceOf[V]
       })
     )
 
     Facet.as[HasNameSettable](result).foreach(facetedRuntimeVertex =>
       Facet.as[HasName](designVertex).foreach(facetedDesignVertex => {
         result =
-          facetedRuntimeVertex.setName(facetedDesignVertex.name).asInstanceOf[RuntimeVertex]
+          facetedRuntimeVertex.setName(facetedDesignVertex.name).asInstanceOf[V]
       })
     )
 
     Facet.as[HasLabelSettable](result).foreach(facetedRuntimeVertex =>
       Facet.as[HasLabel](designVertex).foreach(facetedDesignVertex => {
         result =
-          facetedRuntimeVertex.setLabel(facetedDesignVertex.label).asInstanceOf[RuntimeVertex]
+          facetedRuntimeVertex.setLabel(facetedDesignVertex.label).asInstanceOf[V]
       })
     )
 
     Facet.as[HasSelectedSettable](result).foreach(facetedRuntimeVertex =>
       Facet.as[HasSelected](designVertex).foreach(facetedDesignVertex => {
         result =
-          facetedRuntimeVertex.setSelected(facetedDesignVertex.selected).asInstanceOf[RuntimeVertex]
+          facetedRuntimeVertex.setSelected(facetedDesignVertex.selected).asInstanceOf[V]
       })
     )
 
     Facet.as[HasStyleClassesSettable](result).foreach(facetedRuntimeVertex =>
       Facet.as[HasStyleClasses](designVertex).foreach(facetedDesignVertex => {
         result =
-          facetedRuntimeVertex.setStyleClasses(facetedDesignVertex.styleClasses).asInstanceOf[RuntimeVertex]
+          facetedRuntimeVertex.setStyleClasses(facetedDesignVertex.styleClasses).asInstanceOf[V]
       })
     )
 
     result
   }
 
-  protected def createRuntimeLink(designLink: DesignLink): RuntimeLink
+  protected def createRuntimeLink(designLink: DesignL): L
 
-  protected def copyLinkFacets(designLink: DesignLink, runtimeLink: RuntimeLink): RuntimeLink = {
-    var result: RuntimeLink =
+  protected def copyLinkFacets(designLink: DesignL, runtimeLink: L): L = {
+    var result: L =
       runtimeLink
 
     Facet.as[HasNameSettable](result).foreach(facetedRuntimeLink =>
       Facet.as[HasName](designLink).foreach(facetedDesignLink => {
         result =
-          facetedRuntimeLink.setName(facetedDesignLink.name).asInstanceOf[RuntimeLink]
+          facetedRuntimeLink.setName(facetedDesignLink.name).asInstanceOf[L]
       })
     )
 
     Facet.as[HasLabelSettable](result).foreach(facetedRuntimeLink =>
       Facet.as[HasLabel](designLink).foreach(facetedDesignLink => {
         result =
-          facetedRuntimeLink.setLabel(facetedDesignLink.label).asInstanceOf[RuntimeLink]
+          facetedRuntimeLink.setLabel(facetedDesignLink.label).asInstanceOf[L]
       })
     )
 
     Facet.as[HasSelectedSettable](result).foreach(facetedRuntimeLink =>
       Facet.as[HasSelected](designLink).foreach(facetedDesignLink => {
         result =
-          facetedRuntimeLink.setSelected(facetedDesignLink.selected).asInstanceOf[RuntimeLink]
+          facetedRuntimeLink.setSelected(facetedDesignLink.selected).asInstanceOf[L]
       })
     )
 
     Facet.as[HasStyleClassesSettable](result).foreach(facetedRuntimeLink =>
       Facet.as[HasStyleClasses](designLink).foreach(facetedDesignLink => {
         result =
-          facetedRuntimeLink.setStyleClasses(facetedDesignLink.styleClasses).asInstanceOf[RuntimeLink]
+          facetedRuntimeLink.setStyleClasses(facetedDesignLink.styleClasses).asInstanceOf[L]
       })
     )
 
     Facet.as[HasHandlesSettable](result).foreach(facetedRuntimeLink =>
       Facet.as[HasHandles](designLink).foreach(facetedDesignLink => {
         result =
-          facetedRuntimeLink.setHandles(facetedDesignLink.handles).asInstanceOf[RuntimeLink]
+          facetedRuntimeLink.setHandles(facetedDesignLink.handles).asInstanceOf[L]
       })
     )
 
     Facet.as[HasOptionalCustomLabelCenterSettable](result).foreach(facetedRuntimeLink =>
       Facet.as[HasOptionalCustomLabelCenter](designLink).foreach(facetedDesignLink => {
         result =
-          facetedRuntimeLink.setCustomLabelCenter(facetedDesignLink.customLabelCenter).asInstanceOf[RuntimeLink]
+          facetedRuntimeLink.setCustomLabelCenter(facetedDesignLink.customLabelCenter).asInstanceOf[L]
       })
     )
 
     Facet.as[HasBarbsSettable](result).foreach(facetedRuntimeLink =>
       Facet.as[Arc](designLink).foreach(facetedDesignLink => {
         result =
-          facetedRuntimeLink.setBarbs(facetedDesignLink.barbs).asInstanceOf[RuntimeLink]
+          facetedRuntimeLink.setBarbs(facetedDesignLink.barbs).asInstanceOf[L]
       })
     )
 
@@ -305,34 +296,34 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
               facetedDesignLink.weight,
             capacity=
               facetedDesignLink.capacity
-          ).asInstanceOf[RuntimeLink]
+          ).asInstanceOf[L]
       })
     )
 
     result
   }
 
-  protected def onInit(graph: RuntimeGraph, console: OutputConsole): (RuntimeGraph, Boolean)
+  protected def onInit(graph: G, console: OutputConsole): (G, Boolean)
 
-  protected def onMainStep(stepIndex: Int, graph: RuntimeGraph, console: OutputConsole): (RuntimeGraph, Boolean)
+  protected def onMainStep(stepIndex: Int, graph: G, console: OutputConsole): (G, Boolean)
 
-  protected def onExpectedEnd(stepIndex: Int, graph: RuntimeGraph, console: OutputConsole): RuntimeGraph =
+  protected def onExpectedEnd(stepIndex: Int, graph: G, console: OutputConsole): G =
     graph
 
-  def partialSolutionVertexes: Set[RuntimeVertex] =
-    Set[RuntimeVertex]()
+  def partialSolutionVertexes: Set[V] =
+    Set[V]()
 
-  def partialSolutionLinks: Set[RuntimeLink] =
-    Set[RuntimeLink]()
+  def partialSolutionLinks: Set[L] =
+    Set[L]()
 
-  def fullSolutionVertexes: Set[RuntimeVertex] =
-    Set[RuntimeVertex]()
+  def fullSolutionVertexes: Set[V] =
+    Set[V]()
 
-  def fullSolutionLinks: Set[RuntimeLink] =
-    Set[RuntimeLink]()
+  def fullSolutionLinks: Set[L] =
+    Set[L]()
 
-  protected def askForStartVertex(graph: RuntimeGraph): Option[RuntimeVertex] = {
-    val sortedVertexes: List[RuntimeVertex] =
+  protected def askForStartVertex(graph: G): Option[V] = {
+    val sortedVertexes: List[V] =
       graph
         .vertexes
         .toList

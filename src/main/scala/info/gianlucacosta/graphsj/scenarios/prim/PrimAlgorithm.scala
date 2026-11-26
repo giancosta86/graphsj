@@ -10,16 +10,16 @@ import scala.language.implicitConversions
 
 
 class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
-  override type DesignVertex =
+  override type DesignV =
     PrimDesignVertex
 
-  override type DesignLink =
+  override type DesignL =
     PrimDesignEdge
 
-  override type RuntimeVertex =
+  override type V =
     PrimRuntimeVertex
 
-  override type RuntimeLink =
+  override type L =
     PrimRuntimeEdge
 
   var treeWeight: Double =
@@ -71,7 +71,7 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
     )
   }
 
-  override protected def printAfterInit(graph: RuntimeGraph, console: OutputConsole): Unit = {
+  override protected def printAfterInit(graph: G, console: OutputConsole): Unit = {
     printData(graph, console)
   }
 
@@ -81,7 +81,7 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
     printData(graph, console)
   }
 
-  private def printData(graph: RuntimeGraph, console: OutputConsole): Unit = {
+  private def printData(graph: G, console: OutputConsole): Unit = {
     console.writeln(
       "W",
       treeVertexes
@@ -127,7 +127,7 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
     );
   }
 
-  override protected def onInit(graph: RuntimeGraph, console: OutputConsole): (RuntimeGraph, Boolean) = {
+  override protected def onInit(graph: G, console: OutputConsole): (G, Boolean) = {
     askForStartVertex(graph) match {
       case Some(startVertex) =>
         treeVertexes =
@@ -158,7 +158,7 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
     }
   }
 
-  override protected def onMainStep(stepIndex: Int, graph: RuntimeGraph, console: OutputConsole): (RuntimeGraph, Boolean) = {
+  override protected def onMainStep(stepIndex: Int, graph: G, console: OutputConsole): (G, Boolean) = {
     val (nextTreeVertex, nextTreeEdge) =
       fringe
         .map(vertex => {
@@ -203,7 +203,7 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
     (graph, fringe.nonEmpty)
   }
 
-  override protected def onExpectedEnd(stepIndex: Int, graph: RuntimeGraph, console: OutputConsole): RuntimeGraph = {
+  override protected def onExpectedEnd(stepIndex: Int, graph: G, console: OutputConsole): G = {
     treeWeight =
       treeEdges
         .map(_.weight)
