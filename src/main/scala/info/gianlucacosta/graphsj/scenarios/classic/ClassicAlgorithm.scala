@@ -7,6 +7,7 @@ import info.gianlucacosta.eighthbridge.fx.facets.{HasCenter, HasCenterSettable, 
 import info.gianlucacosta.eighthbridge.fx.{VisualGraph, VisualLink, VisualVertex}
 import info.gianlucacosta.graphsj.scenarios.classic.design.{ClassicDesignLink, ClassicDesignVertex}
 import info.gianlucacosta.graphsj.scenarios.classic.runtime.{ClassicRuntimeLink, ClassicRuntimeVertex}
+import info.gianlucacosta.graphsj.sdk.ouputconsoles.BufferedOutputConsole
 import info.gianlucacosta.graphsj.sdk.{Algorithm, OutputConsole}
 import info.gianlucacosta.helios.fx.dialogs.InputDialogs
 
@@ -47,18 +48,80 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
 
           checkRequirements(runtimeGraph)
 
-          onInit(runtimeGraph, console)
+          if (verbose) {
+            val virtualConsole =
+              new BufferedOutputConsole
 
+            printLegend(virtualConsole)
+
+            virtualConsole.withNonEmptyText(text => {
+              console.writeHeader("Legend")
+              console.writeln()
+              console.write(text)
+              console.writeln()
+            })
+          }
+
+          val (postInitGraph, shouldGoOnAfterInit) =
+            onInit(runtimeGraph, console)
+
+          if (shouldGoOnAfterInit && verbose) {
+            val virtualConsole =
+              new BufferedOutputConsole
+
+            printAfterInit(postInitGraph, virtualConsole)
+
+            virtualConsole.withNonEmptyText(text => {
+              console.writeHeader("Before step 1")
+              console.write(text)
+            })
+          }
+
+          (postInitGraph, shouldGoOnAfterInit)
         case _ =>
-          onMainStep(stepIndex, graph.asInstanceOf[RuntimeGraph], console)
+          if (verbose) {
+            console.writeHeader("Step " + stepIndex);
+            console.writeln();
+          }
+
+          val (postStepGraph, shouldGoOn) =
+            onMainStep(stepIndex, graph.asInstanceOf[RuntimeGraph], console)
+
+          if (verbose) {
+            val virtualConsole =
+              new BufferedOutputConsole
+
+            printAfterMainStep(stepIndex, postStepGraph, virtualConsole)
+
+            virtualConsole.withNonEmptyText(text => {
+              console.writeln("At the end of the step:");
+              console.writeln();
+              console.write(text)
+              console.writeln();
+              console.writeln();
+            })
+          }
+
+          (postStepGraph, shouldGoOn)
       }
 
     if (shouldGoOn) {
       (nextGraph.asInstanceOf[VisualGraph], true)
     } else {
-      val finalGraph: VisualGraph =
+      val finalGraph =
         onExpectedEnd(stepIndex, graph.asInstanceOf[RuntimeGraph], console)
-          .asInstanceOf[VisualGraph] //TODO! Is there no way to delete this upcast and others?
+
+      val virtualConsole =
+        new BufferedOutputConsole
+
+      printConclusion(finalGraph, virtualConsole)
+
+      virtualConsole.withNonEmptyText(text => {
+        console.writeHeader("Conclusion")
+        console.writeln()
+        console.write(text)
+        console.writeln()
+      })
 
       (finalGraph, false)
     }
@@ -75,6 +138,15 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
       "The graph must not have isolated vertexes!"
     )
   }
+
+  protected def printLegend(console: OutputConsole): Unit = {}
+
+  protected def printAfterInit(graph: G, console: OutputConsole): Unit = {}
+
+  //TODO! Also print all the vertex labels?
+  protected def printAfterMainStep(stepIndex: Int, graph: G, console: OutputConsole): Unit = {}
+
+  protected def printConclusion(graph: G, console: OutputConsole): Unit = {}
 
   protected def createRuntimeGraph(designGraph: DesignGraph): RuntimeGraph = {
     var runtimeGraph: RuntimeGraph = (

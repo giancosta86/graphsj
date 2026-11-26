@@ -40,11 +40,92 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
   var minDistanceFromTreeByVertex: Map[V, Weight] =
     _
 
+  private var nextTreeVertex: V = _
+
+
   override protected def createRuntimeVertex(designVertex: PrimDesignVertex): PrimRuntimeVertex =
     new PrimRuntimeVertex(this)
 
   override protected def createRuntimeLink(designLink: PrimDesignEdge): PrimRuntimeEdge =
     new PrimRuntimeEdge(this)
+
+  override protected def printLegend(console: OutputConsole): Unit = {
+    console.writeln(
+      "V",
+      "The graph vertexes"
+    )
+
+    console.writeln(
+      "W",
+      "Vertexes belonging to the tree in the current step"
+    )
+
+    console.writeln(
+      "E",
+      "Edges belonging to the tree in the current step"
+    )
+
+    console.writeln(
+      "Vbar",
+      "Vertex added to the tree in the current step"
+    )
+  }
+
+  override protected def printAfterInit(graph: RuntimeGraph, console: OutputConsole): Unit = {
+    printData(graph, console)
+  }
+
+  override protected def printAfterMainStep(stepIndex: Int, graph: G, console: OutputConsole): Unit = {
+    console.writeln("Vbar", nextTreeVertex.name)
+
+    printData(graph, console)
+  }
+
+  private def printData(graph: RuntimeGraph, console: OutputConsole): Unit = {
+    console.writeln(
+      "W",
+      treeVertexes
+        .map(_.name)
+        .toList
+        .sorted
+    )
+
+    console.writeln(
+      "V\\W",
+      (graph.vertexes -- treeVertexes)
+        .map(_.name)
+        .toList
+        .sorted
+    )
+
+    console.writeln(
+      "E",
+      treeEdges.map(edge =>
+        graph.getAnchorPair(edge)
+          .get
+          .sortedNamePair
+      )
+    )
+  }
+
+  override protected def printConclusion(graph: G, console: OutputConsole): Unit = {
+    console.writeln(
+      "Branches of the spanning tree",
+       treeEdges.map(edge =>
+         graph.getAnchorPair(edge)
+          .get
+          .sortedNamePair
+        )
+    )
+
+    console.writeln();
+
+    //TODO! In writeln(), use Numbers.smartFormat, as well as Set/List/Seq formatting!
+    console.writeln(
+      "Total weight of the spanning tree",
+      treeEdges.totalWeight
+    );
+  }
 
   override protected def onInit(graph: RuntimeGraph, console: OutputConsole): (RuntimeGraph, Boolean) = {
     askForStartVertex(graph) match {
@@ -78,7 +159,7 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
   }
 
   override protected def onMainStep(stepIndex: Int, graph: RuntimeGraph, console: OutputConsole): (RuntimeGraph, Boolean) = {
-    val (nextTreeVertex, nextTreeEdge): (V, L) =
+    val (nextTreeVertex, nextTreeEdge) =
       fringe
         .map(vertex => {
           val closestTreeVertex =
@@ -92,6 +173,9 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
             (vertex, bestEdge)
         }
         .minBy(_._2.weight)
+
+    this.nextTreeVertex =
+      nextTreeVertex
 
     treeVertexes +=
       nextTreeVertex
@@ -128,6 +212,11 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
     graph
   }
 
+  override def partialSolutionVertexes: Set[PrimRuntimeVertex] =
+    treeVertexes
+
   override def partialSolutionLinks: Set[PrimRuntimeEdge] =
     treeEdges
+
+
 }
