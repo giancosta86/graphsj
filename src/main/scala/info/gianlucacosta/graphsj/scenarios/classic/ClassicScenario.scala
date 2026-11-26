@@ -38,10 +38,11 @@ abstract class ClassicScenario extends Scenario {
           "Algorithm settings"
       )
       .foreach(requestedVerbose =>
-        verbose = requestedVerbose
+        verbose =
+          requestedVerbose
       )
 
-    Some(designGraph)
+    None //TODO! When returning Some(designGraph), the graph canvas shrinks!
   }
 
   override def runStepsBeforePausing: Int =
