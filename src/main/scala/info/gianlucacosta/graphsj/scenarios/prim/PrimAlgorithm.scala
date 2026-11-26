@@ -47,7 +47,7 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
   override protected def createRuntimeVertex(designVertex: PrimDesignVertex): PrimRuntimeVertex =
     new PrimRuntimeVertex(this)
 
-  override protected def createRuntimeLink(designLink: PrimDesignEdge): PrimRuntimeEdge =
+  override protected def createRuntimeLink(firstAnchor: PrimDesignVertex, secondAnchor: PrimDesignVertex, designLink: PrimDesignEdge): PrimRuntimeEdge =
     new PrimRuntimeEdge(this)
 
   override protected def printLegend(console: OutputConsole): Unit = {

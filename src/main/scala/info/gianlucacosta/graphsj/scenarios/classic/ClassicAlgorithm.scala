@@ -6,7 +6,7 @@ import info.gianlucacosta.eighthbridge.core.{Facet, Graph}
 import info.gianlucacosta.eighthbridge.fx.facets.{HasCenter, HasCenterSettable, HasHandles, HasHandlesSettable, HasOptionalCustomLabelCenter, HasOptionalCustomLabelCenterSettable}
 import info.gianlucacosta.eighthbridge.fx.{VisualGraph, VisualLink, VisualVertex}
 import info.gianlucacosta.graphsj.scenarios.classic.design.{ClassicDesignLink, ClassicDesignVertex}
-import info.gianlucacosta.graphsj.scenarios.classic.runtime.{ClassicRuntimeLink, ClassicRuntimeVertex}
+import info.gianlucacosta.graphsj.scenarios.classic.runtime.{ClassicDesignGraphExtensions, ClassicRuntimeLink, ClassicRuntimeVertex}
 import info.gianlucacosta.graphsj.sdk.ouputconsoles.BufferedOutputConsole
 import info.gianlucacosta.graphsj.sdk.{Algorithm, OutputConsole}
 import info.gianlucacosta.helios.fx.dialogs.InputDialogs
@@ -146,53 +146,22 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
 
   protected def printConclusion(graph: G, console: OutputConsole): Unit = {}
 
-  protected def createRuntimeGraph(designGraph: DesignG): G = {
-    var runtimeGraph: G = (
-      if (designGraph.isDirected)
-        Graph.createDirected()
-      else
-        Graph.createUndirected()
-      ).asInstanceOf[G]
-
-    var runtimeVertexByDesignVertex: Map[DesignV, V] =
-      Map[DesignV, V]()
-
-    designGraph.vertexes.foreach(designVertex => {
-      val runtimeVertex =
-        createRuntimeVertex(designVertex)
-          .copyFacetsFrom(designVertex)
-
-      runtimeVertexByDesignVertex +=
-        designVertex -> runtimeVertex
-
-      runtimeGraph =
-        runtimeGraph.addVertex(runtimeVertex)
-    })
-
-    designGraph.links.foreach(designLink => {
-      val (firstDesignAnchor, secondDesignAnchor): (DesignV, DesignV) =
-        designGraph.anchorsByLink(designLink).toPair
-
-      val runtimeAnchors =
-        (
-          runtimeVertexByDesignVertex(firstDesignAnchor),
-          runtimeVertexByDesignVertex(secondDesignAnchor)
-        )
-
-      val runtimeLink: L =
-        createRuntimeLink(designLink)
-          .copyFacetsFrom(designLink)
-
-      runtimeGraph =
-        runtimeGraph.addLink(runtimeAnchors, runtimeLink)
-    })
-
-    runtimeGraph
-  }
+  protected def createRuntimeGraph(designGraph: DesignG): G =
+    designGraph
+      .createRuntimeGraph(
+        runtimeVertexCreator =
+          designVertex =>
+            createRuntimeVertex(designVertex)
+              .copyFacetsFrom(designVertex),
+        runtimeLinkCreator =
+          (firstDesignAnchor, secondDesignAnchor, designLink) =>
+            createRuntimeLink(firstDesignAnchor, secondDesignAnchor, designLink)
+              .copyFacetsFrom(designLink)
+      )
 
   protected def createRuntimeVertex(designVertex: DesignV): V
 
-  protected def createRuntimeLink(designLink: DesignL): L
+  protected def createRuntimeLink(firstAnchor: DesignV, secondAnchor: DesignV, designLink: DesignL): L
 
   protected def onInit(graph: G, console: OutputConsole): (G, Boolean)
 
