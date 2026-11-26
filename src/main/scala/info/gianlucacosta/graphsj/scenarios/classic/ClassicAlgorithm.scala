@@ -30,7 +30,7 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
   type G =
     Graph[V, L]
 
-  protected var conclusionReached =
+  var conclusionReached =
     false
 
   override def runStep(stepIndex: Int, graph: VisualGraph, console: OutputConsole): (VisualGraph, Boolean) = {

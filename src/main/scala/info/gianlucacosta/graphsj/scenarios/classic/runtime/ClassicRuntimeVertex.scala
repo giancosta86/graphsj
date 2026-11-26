@@ -14,9 +14,9 @@ abstract class ClassicRuntimeVertex(algorithm: ClassicAlgorithm)
     with HasStyleClasses {
 
   override def styleClasses: Set[String] = {
-    if (algorithm.partialSolutionVertexes.contains(this.asInstanceOf[algorithm.V]))
+    if (!algorithm.conclusionReached && algorithm.partialSolutionVertexes.contains(this.asInstanceOf[algorithm.V]))
       Set("partialSolution")
-    else if (algorithm.fullSolutionVertexes.contains(this.asInstanceOf[algorithm.V]))
+    else if (algorithm.conclusionReached && algorithm.fullSolutionVertexes.contains(this.asInstanceOf[algorithm.V]))
       Set("fullSolution")
     else
       Set()

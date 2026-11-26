@@ -221,5 +221,9 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
   override def partialSolutionLinks: Set[PrimRuntimeEdge] =
     treeEdges
 
+  override def fullSolutionVertexes: Set[PrimRuntimeVertex] =
+    treeVertexes
 
+  override def fullSolutionLinks: Set[PrimRuntimeEdge] =
+    treeEdges
 }
