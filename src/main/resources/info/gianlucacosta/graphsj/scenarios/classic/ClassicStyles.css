@@ -43,19 +43,19 @@
  * FULL SOLUTION
  */
 
-.vertex.fullSolution .label {
+.vertex.conclusion .label {
     -fx-background-color: #9effae;
 }
 
-.vertex.fullSolution .ellipse {
+.vertex.conclusion .ellipse {
     -fx-fill: #9effae;
 }
 
-.link.fullSolution .line {
+.link.conclusion .line {
     -fx-stroke: #9effae;
 }
 
-.link.fullSolution .handle {
+.link.conclusion .handle {
     -fx-stroke: #9effae;
 }
 
@@ -64,18 +64,18 @@
  * FULL SOLUTION - SELECTED
  */
 
-.vertex.fullSolution:selected .label {
+.vertex.conclusion:selected .label {
     -fx-background-color: #4af63d;
 }
 
-.vertex.fullSolution:selected .ellipse {
+.vertex.conclusion:selected .ellipse {
     -fx-fill: #4af63d;
 }
 
-.link.fullSolution:selected .line {
+.link.conclusion:selected .line {
     -fx-stroke: #4af63d;
 }
 
-.link.fullSolution:selected .handle {
+.link.conclusion:selected .handle {
     -fx-fill: #4af63d;
 }

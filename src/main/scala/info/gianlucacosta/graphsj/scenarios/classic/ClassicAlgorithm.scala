@@ -323,10 +323,10 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
   def partialSolutionLinks: Set[L] =
     Set[L]()
 
-  def fullSolutionVertexes: Set[V] =
+  def conclusionVertexes: Set[V] =
     Set[V]()
 
-  def fullSolutionLinks: Set[L] =
+  def conclusionLinks: Set[L] =
     Set[L]()
 
   protected def askForStartVertex(graph: G): Option[V] = {

@@ -15,8 +15,8 @@ abstract class ClassicRuntimeLink(algorithm: ClassicAlgorithm)
   override def styleClasses: Set[String] = {
     if (!algorithm.conclusionReached && algorithm.partialSolutionLinks.contains(this.asInstanceOf[algorithm.L]))
       Set("partialSolution")
-    else if (algorithm.conclusionReached && algorithm.fullSolutionLinks.contains(this.asInstanceOf[algorithm.L]))
-      Set("fullSolution")
+    else if (algorithm.conclusionReached && algorithm.conclusionLinks.contains(this.asInstanceOf[algorithm.L]))
+      Set("conclusion")
     else
       Set()
   }
