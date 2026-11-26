@@ -159,10 +159,8 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
 
     designGraph.vertexes.foreach(designVertex => {
       val runtimeVertex =
-        copyVertexFacets(
-          designVertex,
-          createRuntimeVertex(designVertex)
-        )
+        createRuntimeVertex(designVertex)
+          .copyVertexFacets(designVertex)
 
       runtimeVertexByDesignVertex +=
         designVertex -> runtimeVertex
@@ -195,48 +193,6 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
   }
 
   protected def createRuntimeVertex(designVertex: DesignV): V
-
-  protected def copyVertexFacets(designVertex: DesignV, runtimeVertex: V): V = {
-    var result: V =
-      runtimeVertex
-
-    Facet.as[HasCenterSettable](result).foreach(facetedRuntimeVertex =>
-      Facet.as[HasCenter](designVertex).foreach(facetedDesignVertex => {
-        result =
-          facetedRuntimeVertex.setCenter(facetedDesignVertex.center).asInstanceOf[V]
-      })
-    )
-
-    Facet.as[HasNameSettable](result).foreach(facetedRuntimeVertex =>
-      Facet.as[HasName](designVertex).foreach(facetedDesignVertex => {
-        result =
-          facetedRuntimeVertex.setName(facetedDesignVertex.name).asInstanceOf[V]
-      })
-    )
-
-    Facet.as[HasLabelSettable](result).foreach(facetedRuntimeVertex =>
-      Facet.as[HasLabel](designVertex).foreach(facetedDesignVertex => {
-        result =
-          facetedRuntimeVertex.setLabel(facetedDesignVertex.label).asInstanceOf[V]
-      })
-    )
-
-    Facet.as[HasSelectedSettable](result).foreach(facetedRuntimeVertex =>
-      Facet.as[HasSelected](designVertex).foreach(facetedDesignVertex => {
-        result =
-          facetedRuntimeVertex.setSelected(facetedDesignVertex.selected).asInstanceOf[V]
-      })
-    )
-
-    Facet.as[HasStyleClassesSettable](result).foreach(facetedRuntimeVertex =>
-      Facet.as[HasStyleClasses](designVertex).foreach(facetedDesignVertex => {
-        result =
-          facetedRuntimeVertex.setStyleClasses(facetedDesignVertex.styleClasses).asInstanceOf[V]
-      })
-    )
-
-    result
-  }
 
   protected def createRuntimeLink(designLink: DesignL): L
 
