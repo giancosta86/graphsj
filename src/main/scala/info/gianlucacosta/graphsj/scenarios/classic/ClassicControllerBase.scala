@@ -1,7 +1,7 @@
 package info.gianlucacosta.graphsj.scenarios.classic
 
 import info.gianlucacosta.eighthbridge.core.facets.HasLabel
-import info.gianlucacosta.eighthbridge.fx.facets.{HasOptionalCustomLabelCenter, HasOptionalCustomLabelCenterSettable}
+import info.gianlucacosta.eighthbridge.fx.facets.HasOptionalCustomLabelCenterSettable
 import info.gianlucacosta.eighthbridge.fx.linknodes.labeled.LabeledLinkNode
 import info.gianlucacosta.eighthbridge.fx.vertexnodes.labeled.LabeledVertexNode
 import info.gianlucacosta.eighthbridge.fx.{GraphCanvasController, LinkNode, VertexNode, VisualLink, VisualVertex}

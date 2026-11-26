@@ -1,10 +1,7 @@
 package info.gianlucacosta.graphsj.scenarios.classic
 
-import info.gianlucacosta.eighthbridge.core.directed.{Arc, HasBarbsSettable}
-import info.gianlucacosta.eighthbridge.core.facets.{HasLabel, HasLabelSettable, HasName, HasNameSettable, HasSelected, HasSelectedSettable, HasStyleClasses, HasStyleClassesSettable, HasWeightBounded, HasWeightBoundedSettable}
-import info.gianlucacosta.eighthbridge.core.{Facet, Graph}
-import info.gianlucacosta.eighthbridge.fx.facets.{HasCenter, HasCenterSettable, HasHandles, HasHandlesSettable, HasOptionalCustomLabelCenter, HasOptionalCustomLabelCenterSettable}
-import info.gianlucacosta.eighthbridge.fx.{VisualGraph, VisualLink, VisualVertex}
+import info.gianlucacosta.eighthbridge.core.Graph
+import info.gianlucacosta.eighthbridge.fx.VisualGraph
 import info.gianlucacosta.graphsj.scenarios.classic.design.{ClassicDesignLink, ClassicDesignVertex}
 import info.gianlucacosta.graphsj.scenarios.classic.runtime.{ClassicDesignGraphExtensions, ClassicRuntimeLink, ClassicRuntimeVertex}
 import info.gianlucacosta.graphsj.sdk.ouputconsoles.BufferedOutputConsole

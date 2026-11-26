@@ -1,7 +1,5 @@
 package info.gianlucacosta.graphsj.icons
 
-import info.gianlucacosta.graphsj.icons.MainIcon.getClass
-
 import java.io.InputStream
 import java.net.URL
 

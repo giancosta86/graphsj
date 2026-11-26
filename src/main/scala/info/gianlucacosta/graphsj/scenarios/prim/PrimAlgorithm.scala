@@ -1,9 +1,7 @@
 package info.gianlucacosta.graphsj.scenarios.prim
 
 import info.gianlucacosta.eighthbridge.core.facets.Weight
-import info.gianlucacosta.eighthbridge.fx.VisualGraph
 import info.gianlucacosta.graphsj.scenarios.classic.ClassicAlgorithm
-import info.gianlucacosta.graphsj.scenarios.classic.runtime.{ClassicRuntimeLink, ClassicRuntimeVertex}
 import info.gianlucacosta.graphsj.sdk.OutputConsole
 
 import scala.language.implicitConversions

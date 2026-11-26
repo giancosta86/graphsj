@@ -1,7 +1,5 @@
 package info.gianlucacosta.graphsj
 
-import info.gianlucacosta.graphsj.ArtifactInfo.getClass
-
 import java.util.Properties
 
 //TODO! Move this to Helios-core

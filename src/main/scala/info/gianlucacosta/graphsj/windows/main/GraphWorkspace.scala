@@ -1,32 +1,29 @@
 package info.gianlucacosta.graphsj.windows.main
 
-import java.io._
-import java.net.URL
-import java.nio.file.Files
-import java.util.regex.Pattern
-import javafx.beans.Observable
-import javafx.stage.Stage
-
-import javax.json.{Json, JsonObject}
 import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.converters.ConversionException
 import com.thoughtworks.xstream.io.xml.StaxDriver
 import info.gianlucacosta.eighthbridge.fx.GraphCanvas
-import info.gianlucacosta.eighthbridge.fx.VisualGraph
 import info.gianlucacosta.graphsj.sdk.Scenario
-import info.gianlucacosta.graphsj.{App, ScenarioRepository, windows}
+import info.gianlucacosta.graphsj.{App, ScenarioRepository}
 import info.gianlucacosta.helios.apps.AppInfo
 import info.gianlucacosta.helios.desktop.DesktopUtils
 import info.gianlucacosta.helios.fx.dialogs.{Alerts, BusyDialog, InputDialogs}
 import info.gianlucacosta.helios.fx.workspace.Workspace
-
-import scala.collection.JavaConversions._
+import javafx.stage.Stage
 import scalafx.Includes._
 import scalafx.application.Platform
 import scalafx.beans.property.ObjectProperty
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.{Alert, ButtonType}
 import scalafx.stage.FileChooser
+
+import java.io._
+import java.net.URL
+import java.nio.file.Files
+import java.util.regex.Pattern
+import javax.json.{Json, JsonObject}
+import scala.collection.JavaConversions._
 
 private object GraphWorkspace {
   private val PredefinedScenariosJarFileNameRegex =

@@ -1,6 +1,5 @@
 package info.gianlucacosta.graphsj.scenarios.prim
 
-import info.gianlucacosta.eighthbridge.core.facets.{HasLabelSettable, HasNameSettable}
 import info.gianlucacosta.graphsj.scenarios.classic.runtime.ClassicRuntimeVertex
 import info.gianlucacosta.helios.mathutils.Numbers
 

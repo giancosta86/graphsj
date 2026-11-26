@@ -4,12 +4,6 @@ import info.gianlucacosta.graphsj.scenarios.prim.PrimScenarioFactory
 import info.gianlucacosta.graphsj.sdk.ScenarioFactory
 
 import java.io.File
-import java.lang.reflect.Modifier
-import org.reflections.Reflections
-import org.reflections.util.ConfigurationBuilder
-
-import scala.collection.JavaConversions._
-import scala.reflect.internal.util.ScalaClassLoader.URLClassLoader
 
 class ScenarioRepository(baseDirectory: File) {
   //TODO!

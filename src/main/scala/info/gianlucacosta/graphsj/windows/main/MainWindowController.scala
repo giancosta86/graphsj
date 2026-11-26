@@ -1,27 +1,20 @@
 package info.gianlucacosta.graphsj.windows.main
 
-import java.io._
-import java.nio.charset.Charset
-import java.nio.file.Files
-import java.util.concurrent.Callable
+import info.gianlucacosta.eighthbridge.fx.{GraphCanvas, VisualGraph}
+import info.gianlucacosta.graphsj.sdk.ouputconsoles.TextAreaOutputConsole
+import info.gianlucacosta.graphsj.sdk.{Algorithm, OutputConsole}
+import info.gianlucacosta.graphsj.{App, ScenarioRepository}
+import info.gianlucacosta.helios.apps.AppInfo
+import info.gianlucacosta.helios.desktop.DesktopUtils
+import info.gianlucacosta.helios.fx.Includes._
+import info.gianlucacosta.helios.fx.dialogs.about.AboutBox
+import info.gianlucacosta.helios.fx.dialogs.{Alerts, InputDialogs}
 import javafx.beans.Observable
 import javafx.beans.binding.Bindings
 import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.scene.input.MouseEvent
 import javafx.stage.Stage
-
-import javax.imageio.ImageIO
-import info.gianlucacosta.eighthbridge.fx.GraphCanvas
-import info.gianlucacosta.eighthbridge.fx.{VisualGraph, VisualLink, VisualVertex}
-import info.gianlucacosta.graphsj.sdk.ouputconsoles.TextAreaOutputConsole
-import info.gianlucacosta.graphsj.sdk.{Algorithm, OutputConsole}
-import info.gianlucacosta.graphsj.{App, ScenarioRepository}
-import info.gianlucacosta.helios.apps.AppInfo
-import info.gianlucacosta.helios.desktop.DesktopUtils
-import info.gianlucacosta.helios.fx.dialogs.about.AboutBox
-import info.gianlucacosta.helios.fx.Includes._
-import info.gianlucacosta.helios.fx.dialogs.{Alerts, InputDialogs}
 import scalafx.Includes._
 import scalafx.application.Platform
 import scalafx.beans.property.{BooleanProperty, ObjectProperty}
@@ -31,6 +24,12 @@ import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control._
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.stage.FileChooser
+
+import java.io._
+import java.nio.charset.Charset
+import java.nio.file.Files
+import java.util.concurrent.Callable
+import javax.imageio.ImageIO
 
 
 object MainWindowController {
