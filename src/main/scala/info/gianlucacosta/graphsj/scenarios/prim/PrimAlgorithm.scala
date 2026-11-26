@@ -200,11 +200,13 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
       }
     })
 
+    conclusionReached =
+      fringe.isEmpty
 
-    (graph, fringe.nonEmpty)
+    (graph, !conclusionReached)
   }
 
-  override protected def onExpectedEnd(stepIndex: Int, graph: G, console: OutputConsole): G = {
+  override protected def onConclusion(stepIndex: Int, graph: G, console: OutputConsole): G = {
     treeWeight =
       treeEdges
         .map(_.weight)

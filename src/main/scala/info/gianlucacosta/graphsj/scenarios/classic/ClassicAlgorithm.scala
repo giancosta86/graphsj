@@ -30,6 +30,9 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
   type G =
     Graph[V, L]
 
+  protected var conclusionReached =
+    false
+
   override def runStep(stepIndex: Int, graph: VisualGraph, console: OutputConsole): (VisualGraph, Boolean) = {
     val (nextGraph, shouldGoOn) =
       stepIndex match {
@@ -99,22 +102,26 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
     if (shouldGoOn) {
       (nextGraph.asInstanceOf[VisualGraph], true)
     } else {
-      val finalGraph =
-        onExpectedEnd(stepIndex, graph.asInstanceOf[G], console)
+      if (conclusionReached) {
+        val conclusionGraph =
+          onConclusion(stepIndex, graph.asInstanceOf[G], console)
 
-      val virtualConsole =
-        new BufferedOutputConsole
+        val virtualConsole =
+          new BufferedOutputConsole
 
-      printConclusion(finalGraph, virtualConsole)
+        printConclusion(conclusionGraph, virtualConsole)
 
-      virtualConsole.withNonEmptyText(text => {
-        console.writeHeader("Conclusion")
-        console.writeln()
-        console.write(text)
-        console.writeln()
-      })
+        virtualConsole.withNonEmptyText(text => {
+          console.writeHeader("Conclusion")
+          console.writeln()
+          console.write(text)
+          console.writeln()
+        })
 
-      (finalGraph, false)
+        (conclusionGraph, false)
+      } else {
+        (graph, false)
+      }
     }
   }
 
@@ -307,7 +314,7 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
 
   protected def onMainStep(stepIndex: Int, graph: G, console: OutputConsole): (G, Boolean)
 
-  protected def onExpectedEnd(stepIndex: Int, graph: G, console: OutputConsole): G =
+  protected def onConclusion(stepIndex: Int, graph: G, console: OutputConsole): G =
     graph
 
   def partialSolutionVertexes: Set[V] =
