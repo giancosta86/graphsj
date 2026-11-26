@@ -148,6 +148,17 @@ class MainWindowController {
       if (running()) {
         consoleArea.clear()
 
+        val scenarioName =
+          workspace.scenario().get.name
+
+        consoleArea.appendText("-" * scenarioName.length)
+        consoleArea.appendText("\n")
+        consoleArea.appendText(scenarioName)
+        consoleArea.appendText("\n")
+        consoleArea.appendText("-" * scenarioName.length)
+        consoleArea.appendText("\n")
+        consoleArea.appendText("\n")
+
         algorithm =
           workspace.scenario().get.createAlgorithm()
 

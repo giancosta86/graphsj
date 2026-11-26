@@ -78,10 +78,6 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
   }
 
   override protected def onMainStep(stepIndex: Int, graph: RuntimeGraph, console: OutputConsole): (RuntimeGraph, Boolean) = {
-    if (fringe.isEmpty) {
-      return (graph, false)
-    }
-
     val (nextTreeVertex, nextTreeEdge): (V, L) =
       fringe
         .map(vertex => {
@@ -119,7 +115,8 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
       }
     })
 
-    (graph, true)
+
+    (graph, fringe.nonEmpty)
   }
 
   override protected def onExpectedEnd(stepIndex: Int, graph: RuntimeGraph, console: OutputConsole): RuntimeGraph = {
