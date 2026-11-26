@@ -11,5 +11,8 @@ class ClassicControllerBase extends GraphCanvasController {
     new LabeledVertexNode(graphCanvas, vertex)
 
   override def createLinkNode(link: VisualLink): LinkNode =
-    new LabeledLinkNode(graphCanvas, link.asInstanceOf[VisualLink with HasLabel with HasOptionalCustomLabelCenterSettable])
+    new LabeledLinkNode(
+      graphCanvas,
+      link.asInstanceOf[VisualLink with HasLabel with HasOptionalCustomLabelCenterSettable]
+    )
 }
