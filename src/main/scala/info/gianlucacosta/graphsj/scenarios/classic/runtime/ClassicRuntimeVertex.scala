@@ -24,7 +24,7 @@ abstract class ClassicRuntimeVertex(algorithm: ClassicAlgorithm)
       Set()
   }
 
-  def copyVertexFacets(designVertex: ClassicDesignVertex): this.type = {
+  def copyFacetsFrom(designVertex: ClassicDesignVertex): this.type = {
     var result: this.type =
       this
 
