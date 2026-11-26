@@ -22,6 +22,7 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
   override type L =
     PrimRuntimeEdge
 
+  //TODO! Should I use getters, or would that be over-encapsulation
   var treeWeight: Double =
     _
 
@@ -35,10 +36,10 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
     _
 
   var closestTreeVertexByVertex: Map[V, V] =
-    _
+    Map[V, V]()
 
   var minDistanceFromTreeByVertex: Map[V, Weight] =
-    _
+    Map[V, Weight]()
 
   private var nextTreeVertex: V = _
 
