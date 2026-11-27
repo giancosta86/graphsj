@@ -180,7 +180,18 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
     printGraphSnapshot(graph, console)
   }
 
-  protected def printGraphSnapshot(graph: G, console: OutputConsole): Unit
+  protected def printGraphSnapshot(graph: G, console: OutputConsole): Unit = {
+    console.writeln("VERTEX LABELS:")
+    console.writeln()
+
+    graph
+      .vertexes
+      .toList
+      .sortBy(_.name)
+      .foreach(vertex => {
+        console.writeln(s"* ${vertex.name} --> ${vertex.label}")
+      })
+  }
 
   protected def onConclusion(stepIndex: Int, graph: G, console: OutputConsole): Unit = {}
 

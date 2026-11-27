@@ -124,6 +124,10 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
           .sortedNamePair
       )
     )
+
+    console.writeln()
+
+    super.printGraphSnapshot(graph, console)
   }
 
   override protected def onMainStep(stepIndex: Int, graph: G, console: OutputConsole): ClassicAlgorithmStepOutcome[PrimRuntimeVertex, PrimRuntimeEdge] = {
