@@ -13,11 +13,12 @@ abstract class ClassicRuntimeLink(algorithm: ClassicAlgorithm)
   with HasLabelSettable
   with HasOptionalCustomLabelCenterSettable {
   override def styleClasses: Set[String] = {
-    if (!algorithm.conclusionReached && algorithm.partialSolutionLinks.contains(this.asInstanceOf[algorithm.L]))
+    if (!algorithm.conclusionReached &&
+      algorithm.partialSolutionLinks.contains(this.asInstanceOf[algorithm.L])) {
       Set("partialSolution")
-    else if (algorithm.conclusionReached && algorithm.conclusionLinks.contains(this.asInstanceOf[algorithm.L]))
+    } else if (algorithm.conclusionReached && algorithm.conclusionLinks.contains(this.asInstanceOf[algorithm.L])) {
       Set("conclusion")
-    else
+    } else
       Set()
   }
 }
