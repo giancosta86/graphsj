@@ -3,25 +3,23 @@ package info.gianlucacosta.graphsj.scenarios.prim
 import info.gianlucacosta.eighthbridge.fx.VisualVertex
 import info.gianlucacosta.eighthbridge.fx.controllers.creation.CreateVertexWithName
 import info.gianlucacosta.eighthbridge.fx.controllers.editing.{EditLinkWeight, EditVertexName}
-import info.gianlucacosta.graphsj.scenarios.classic.design.ClassicDesignController
+import info.gianlucacosta.graphsj.scenarios.classic.design.{ClassicDesignController, ClassicDesignLink, ClassicVertexNamingDesignController}
 import scalafx.geometry.Point2D
 
 class PrimDesignController
   extends ClassicDesignController
-  with CreateVertexWithName
+  with ClassicVertexNamingDesignController
   with EditVertexName
   with EditLinkWeight {
-  override protected def createNamedVertex(center: Point2D, vertexName: String): PrimDesignVertex =
-    new PrimDesignVertex()
-      .setCenter(center)
-      .setName(vertexName)
+  override type DesignVertex =
+    PrimDesignVertex
 
-  override def addLink(sourceVertex: VisualVertex, targetVertex: VisualVertex): Unit = {
-    graph =
-      graph.addLink(
-        sourceVertex,
-        targetVertex,
-        new PrimDesignEdge()
-      )
-  }
+  override type DesignLink =
+    PrimDesignEdge
+
+  override val designVertexClass: Class[_ <: PrimDesignVertex] =
+    classOf[PrimDesignVertex]
+
+  override val designLinkClass: Class[_ <: DesignLink] =
+    classOf[PrimDesignEdge]
 }

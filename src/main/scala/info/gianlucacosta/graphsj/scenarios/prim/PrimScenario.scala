@@ -2,9 +2,9 @@ package info.gianlucacosta.graphsj.scenarios.prim
 
 import info.gianlucacosta.eighthbridge.fx.GraphCanvasController
 import info.gianlucacosta.graphsj.scenarios.classic.ClassicScenario
+import info.gianlucacosta.graphsj.scenarios.classic.runtime.ClassicRuntimeController
 import info.gianlucacosta.graphsj.sdk.Algorithm
 import info.gianlucacosta.graphsj.sdk.scenarios.UndirectedGraphScenario
-
 
 object PrimScenario {
   val Name: String =
@@ -24,5 +24,5 @@ class PrimScenario
     new PrimDesignController
 
   override def createRuntimeController(): GraphCanvasController =
-    new PrimRuntimeController
+    new ClassicRuntimeController
 }
