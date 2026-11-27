@@ -3,7 +3,7 @@ package info.gianlucacosta.graphsj.scenarios.classic
 import info.gianlucacosta.eighthbridge.core.Graph
 import info.gianlucacosta.eighthbridge.fx.VisualGraph
 import info.gianlucacosta.graphsj.scenarios.classic.design.{ClassicDesignLink, ClassicDesignVertex}
-import info.gianlucacosta.graphsj.scenarios.classic.runtime.{ClassicDesignGraphExtensions, ClassicRuntimeLink, ClassicRuntimeVertex}
+import info.gianlucacosta.graphsj.scenarios.classic.runtime.{ClassicRuntimeLink, ClassicRuntimeVertex}
 import info.gianlucacosta.graphsj.sdk.ouputconsoles.BufferedOutputConsole
 import info.gianlucacosta.graphsj.sdk.{Algorithm, OutputConsole}
 import info.gianlucacosta.helios.fx.dialogs.InputDialogs
@@ -145,12 +145,12 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
 
   protected def createRuntimeGraph(designGraph: DesignG): G =
     designGraph
-      .createRuntimeGraph(
-        runtimeVertexCreator =
+      .mapWithFacetsTo(
+        targetVertexCreator =
           designVertex =>
             createRuntimeVertex(designVertex)
               .copyFacetsFrom(designVertex),
-        runtimeLinkCreator =
+        targetLinkCreator =
           (firstDesignAnchor, secondDesignAnchor, designLink) =>
             createRuntimeLink(firstDesignAnchor, secondDesignAnchor, designLink)
               .copyFacetsFrom(designLink)
