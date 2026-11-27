@@ -10,7 +10,6 @@ abstract class ClassicRuntimeLink(algorithm: ClassicAlgorithm)
   with HasSelectedSettable
   with HasHandlesSettable
   with HasStyleClasses
-  with HasLabelSettable
   with HasOptionalCustomLabelCenterSettable {
   override def styleClasses: Set[String] = {
     if (!algorithm.conclusionReached &&

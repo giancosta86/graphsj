@@ -1,11 +1,10 @@
 package info.gianlucacosta.graphsj.scenarios.prim
 
 import info.gianlucacosta.eighthbridge.core.facets.Weight
-import info.gianlucacosta.graphsj.scenarios.classic.ClassicAlgorithm
+import info.gianlucacosta.graphsj.scenarios.classic.{ClassicAlgorithm, ClassicAlgorithmStepOutcome, Conclude, GoOn, Interrupt}
 import info.gianlucacosta.graphsj.sdk.OutputConsole
 
 import scala.language.implicitConversions
-
 
 class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
   override type DesignV =
@@ -20,7 +19,7 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
   override type L =
     PrimRuntimeEdge
 
-  //TODO! Should I use getters, or would that be over-encapsulation
+  //TODO! Should I use getters, or would that be over-encapsulation?
   var treeWeight: Double =
     _
 
@@ -41,12 +40,42 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
 
   private var nextTreeVertex: V = _
 
-
   override protected def createRuntimeVertex(designVertex: PrimDesignVertex): PrimRuntimeVertex =
     new PrimRuntimeVertex(this)
 
   override protected def createRuntimeLink(firstAnchor: PrimDesignVertex, secondAnchor: PrimDesignVertex, designLink: PrimDesignEdge): PrimRuntimeEdge =
     new PrimRuntimeEdge(this)
+
+  override protected def onInit(graph: G, console: OutputConsole): ClassicAlgorithmStepOutcome[PrimRuntimeVertex, PrimRuntimeEdge] = {
+    askForStartVertex(graph) match {
+      case Some(startVertex) =>
+        treeVertexes =
+          Set[V](startVertex)
+
+        treeEdges =
+          Set[L]()
+
+        fringe = (graph.vertexes - startVertex)
+          .toList
+          .sortBy(_.name)
+
+        closestTreeVertexByVertex =
+          fringe
+            .map(_ -> startVertex)
+            .toMap
+
+        minDistanceFromTreeByVertex =
+          fringe
+            .map(vertex =>
+              vertex -> graph.getMinWeightBetween(vertex, startVertex)
+            )
+            .toMap
+
+        GoOn(graph)
+      case None =>
+        Interrupt(graph)
+    }
+  }
 
   override protected def printLegend(console: OutputConsole): Unit = {
     console.writeln(
@@ -70,17 +99,7 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
     )
   }
 
-  override protected def printAfterInit(graph: G, console: OutputConsole): Unit = {
-    printData(graph, console)
-  }
-
-  override protected def printAfterMainStep(stepIndex: Int, graph: G, console: OutputConsole): Unit = {
-    console.writeln("Vbar", nextTreeVertex.name)
-
-    printData(graph, console)
-  }
-
-  private def printData(graph: G, console: OutputConsole): Unit = {
+  protected override def printGraphSnapshot(graph: G, console: OutputConsole): Unit = {
     console.writeln(
       "W",
       treeVertexes
@@ -107,57 +126,7 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
     )
   }
 
-  override protected def printConclusion(graph: G, console: OutputConsole): Unit = {
-    console.writeln(
-      "Branches of the spanning tree",
-       treeEdges.map(edge =>
-         graph.getAnchorPair(edge)
-          .get
-          .sortedNamePair
-        )
-    )
-
-    console.writeln();
-
-    //TODO! In writeln(), use Numbers.smartFormat, as well as Set/List/Seq formatting!
-    console.writeln(
-      "Total weight of the spanning tree",
-      treeEdges.totalWeight
-    );
-  }
-
-  override protected def onInit(graph: G, console: OutputConsole): (G, Boolean) = {
-    askForStartVertex(graph) match {
-      case Some(startVertex) =>
-        treeVertexes =
-          Set[V](startVertex)
-
-        treeEdges =
-          Set[L]()
-
-        fringe = (graph.vertexes - startVertex)
-          .toList
-          .sortBy(_.name)
-
-        closestTreeVertexByVertex =
-          fringe
-            .map(_ -> startVertex)
-            .toMap
-
-        minDistanceFromTreeByVertex =
-          fringe
-            .map(vertex =>
-              vertex -> graph.getMinWeightBetween(vertex, startVertex)
-            )
-            .toMap
-
-        (graph, true)
-      case None =>
-        (graph, false)
-    }
-  }
-
-  override protected def onMainStep(stepIndex: Int, graph: G, console: OutputConsole): (G, Boolean) = {
+  override protected def onMainStep(stepIndex: Int, graph: G, console: OutputConsole): ClassicAlgorithmStepOutcome[PrimRuntimeVertex, PrimRuntimeEdge] = {
     val (nextTreeVertex, nextTreeEdge) =
       fringe
         .map(vertex => {
@@ -198,19 +167,42 @@ class PrimAlgorithm(verbose: Boolean) extends ClassicAlgorithm(verbose) {
       }
     })
 
-    conclusionReached =
-      fringe.isEmpty
-
-    (graph, !conclusionReached)
+    if (fringe.isEmpty) {
+      Conclude(graph)
+    } else {
+      GoOn(graph)
+    }
   }
 
-  override protected def onConclusion(stepIndex: Int, graph: G, console: OutputConsole): G = {
+  override protected def printAfterMainStep(stepIndex: Int, graph: G, console: OutputConsole): Unit = {
+    console.writeln("Vbar", nextTreeVertex.name)
+
+    super.printAfterMainStep(stepIndex, graph, console)
+  }
+
+  override protected def onConclusion(stepIndex: Int, graph: G, console: OutputConsole): Unit = {
     treeWeight =
       treeEdges
         .map(_.weight)
         .sum
+  }
 
-    graph
+  override protected def printConclusion(stepIndex: Int, graph: G, console: OutputConsole): Unit = {
+    console.writeln(
+      "Branches of the spanning tree",
+       treeEdges.map(edge =>
+         graph.getAnchorPair(edge)
+          .get
+          .sortedNamePair
+        )
+    )
+
+    console.writeln();
+
+    console.writeln(
+      "Total weight of the spanning tree",
+      treeEdges.totalWeight
+    );
   }
 
   override def partialSolutionVertexes: Set[PrimRuntimeVertex] =

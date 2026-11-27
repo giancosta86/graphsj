@@ -5,7 +5,7 @@ import info.gianlucacosta.eighthbridge.core.facets._
 import info.gianlucacosta.eighthbridge.fx.VisualVertex
 import info.gianlucacosta.eighthbridge.fx.facets.HasCenterSettable
 
-class ClassicDesignVertex
+trait ClassicDesignVertex
   extends VisualVertex
     with HasCenterSettable
     with HasSelectedSettable

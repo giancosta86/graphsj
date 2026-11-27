@@ -6,7 +6,7 @@ import info.gianlucacosta.graphsj.scenarios.classic.design.{ClassicDesignLink, C
 import info.gianlucacosta.graphsj.scenarios.classic.runtime.{ClassicRuntimeLink, ClassicRuntimeVertex}
 import info.gianlucacosta.graphsj.sdk.ouputconsoles.BufferedOutputConsole
 import info.gianlucacosta.graphsj.sdk.{Algorithm, OutputConsole}
-import info.gianlucacosta.helios.fx.dialogs.InputDialogs
+import info.gianlucacosta.helios.fx.dialogs.{Alerts, InputDialogs}
 
 abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorithm {
   type DesignV <:
@@ -15,7 +15,7 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
   type DesignL <:
     ClassicDesignLink
 
-  type DesignG =
+  final type DesignG =
     Graph[DesignV, DesignL]
 
   type V <:
@@ -24,102 +24,117 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
   type L <:
     ClassicRuntimeLink
 
-  type G =
+  final type G =
     Graph[V, L]
 
-  var conclusionReached =
+  private var _conclusionReached: Boolean =
     false
 
+  def conclusionReached: Boolean =
+    _conclusionReached
+
   override def runStep(stepIndex: Int, graph: VisualGraph, console: OutputConsole): (VisualGraph, Boolean) = {
-    val (nextGraph, shouldGoOn) =
+    val stepOutcome: ClassicAlgorithmStepOutcome[V, L] =
       stepIndex match {
         case 0 =>
-          val runtimeGraph: G =
-            createRuntimeGraph(graph.asInstanceOf[DesignG])
+          handleInitStep(graph, console)
 
-          checkRequirements(runtimeGraph)
-
-          if (verbose) {
-            val virtualConsole =
-              new BufferedOutputConsole
-
-            printLegend(virtualConsole)
-
-            virtualConsole.withNonEmptyText(text => {
-              console.writeHeader("Legend")
-              console.writeln()
-              console.write(text)
-              console.writeln()
-            })
-          }
-
-          val (postInitGraph, shouldGoOnAfterInit) =
-            onInit(runtimeGraph, console)
-
-          if (shouldGoOnAfterInit && verbose) {
-            val virtualConsole =
-              new BufferedOutputConsole
-
-            printAfterInit(postInitGraph, virtualConsole)
-
-            virtualConsole.withNonEmptyText(text => {
-              console.writeHeader("Before step 1")
-              console.write(text)
-            })
-          }
-
-          (postInitGraph, shouldGoOnAfterInit)
         case _ =>
-          if (verbose) {
-            console.writeHeader("Step " + stepIndex);
-            console.writeln();
-          }
-
-          val (postStepGraph, shouldGoOn) =
-            onMainStep(stepIndex, graph.asInstanceOf[G], console)
-
-          if (verbose) {
-            val virtualConsole =
-              new BufferedOutputConsole
-
-            printAfterMainStep(stepIndex, postStepGraph, virtualConsole)
-
-            virtualConsole.withNonEmptyText(text => {
-              console.writeln("At the end of the step:");
-              console.writeln();
-              console.write(text)
-              console.writeln();
-              console.writeln();
-            })
-          }
-
-          (postStepGraph, shouldGoOn)
+          handleMainStep(stepIndex, graph, console)
       }
 
-    if (shouldGoOn) {
-      (nextGraph.asInstanceOf[VisualGraph], true)
-    } else {
-      if (conclusionReached) {
-        val conclusionGraph =
-          onConclusion(stepIndex, graph.asInstanceOf[G], console)
+    if (stepOutcome.conclusionReached) {
+      handleConclusion(stepIndex, graph, console)
+    }
 
+    stepOutcome.stepResult
+  }
+
+  private def handleInitStep(graph: VisualGraph, console: OutputConsole): ClassicAlgorithmStepOutcome[V, L] = {
+    val runtimeGraph: G =
+      createRuntimeGraph(graph.asInstanceOf[DesignG])
+
+    checkRequirements(runtimeGraph)
+
+    val initOutcome =
+      onInit(runtimeGraph, console)
+
+    if (initOutcome.canProceed && verbose) {
+      {
         val virtualConsole =
           new BufferedOutputConsole
 
-        printConclusion(conclusionGraph, virtualConsole)
+        printLegend(virtualConsole)
 
         virtualConsole.withNonEmptyText(text => {
-          console.writeHeader("Conclusion")
+          console.writeHeader("Legend")
           console.writeln()
           console.write(text)
           console.writeln()
         })
+      }
 
-        (conclusionGraph, false)
-      } else {
-        (graph, false)
+      {
+        val virtualConsole =
+          new BufferedOutputConsole
+
+        printAfterInit(initOutcome.graph, virtualConsole)
+
+        virtualConsole.withNonEmptyText(text => {
+          console.writeHeader("Before step 1")
+          console.writeln()
+          console.write(text)
+        })
       }
     }
+
+    initOutcome
+  }
+
+  private def handleMainStep(stepIndex: Int, graph: VisualGraph, console: OutputConsole): ClassicAlgorithmStepOutcome[V, L] = {
+    if (verbose) {
+      console.writeln()
+      console.writeHeader("Step " + stepIndex);
+      console.writeln();
+    }
+
+    val mainStepOutcome =
+      onMainStep(stepIndex, graph.asInstanceOf[G], console)
+
+    if (mainStepOutcome.canProceed && verbose) {
+      val virtualConsole =
+        new BufferedOutputConsole
+
+      printAfterMainStep(stepIndex, mainStepOutcome.graph, virtualConsole)
+
+      virtualConsole.withNonEmptyText(text => {
+        console.writeln("At the end of the step:")
+        console.writeln()
+        console.write(text)
+        console.writeln()
+        console.writeln()
+      })
+    }
+
+    mainStepOutcome
+  }
+
+  private def handleConclusion(stepIndex: Int, graph: VisualGraph, console: OutputConsole): Unit = {
+    _conclusionReached =
+      true
+
+    onConclusion(stepIndex, graph.asInstanceOf[G], console)
+
+    val virtualConsole =
+      new BufferedOutputConsole
+
+    printConclusion(stepIndex, graph.asInstanceOf[G], virtualConsole)
+
+    virtualConsole.withNonEmptyText(text => {
+      console.writeHeader("Conclusion")
+      console.writeln()
+      console.write(text)
+    })
   }
 
   protected def checkRequirements(graph: G): Unit = {
@@ -133,15 +148,6 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
       "The graph must not have isolated vertexes!"
     )
   }
-
-  protected def printLegend(console: OutputConsole): Unit = {}
-
-  protected def printAfterInit(graph: G, console: OutputConsole): Unit = {}
-
-  //TODO! Also print all the vertex labels?
-  protected def printAfterMainStep(stepIndex: Int, graph: G, console: OutputConsole): Unit = {}
-
-  protected def printConclusion(graph: G, console: OutputConsole): Unit = {}
 
   protected def createRuntimeGraph(designGraph: DesignG): G =
     designGraph
@@ -160,12 +166,25 @@ abstract class ClassicAlgorithm(protected val verbose: Boolean) extends Algorith
 
   protected def createRuntimeLink(firstAnchor: DesignV, secondAnchor: DesignV, designLink: DesignL): L
 
-  protected def onInit(graph: G, console: OutputConsole): (G, Boolean)
+  protected def onInit(graph: G, console: OutputConsole): ClassicAlgorithmStepOutcome[V, L]
 
-  protected def onMainStep(stepIndex: Int, graph: G, console: OutputConsole): (G, Boolean)
+  protected def onMainStep(stepIndex: Int, graph: G, console: OutputConsole): ClassicAlgorithmStepOutcome[V, L]
 
-  protected def onConclusion(stepIndex: Int, graph: G, console: OutputConsole): G =
-    graph
+  protected def printLegend(console: OutputConsole): Unit = {}
+
+  protected def printAfterInit(graph: G, console: OutputConsole): Unit = {
+    printGraphSnapshot(graph, console)
+  }
+
+  protected def printAfterMainStep(stepIndex: Int, graph: G, console: OutputConsole): Unit = {
+    printGraphSnapshot(graph, console)
+  }
+
+  protected def printGraphSnapshot(graph: G, console: OutputConsole): Unit
+
+  protected def onConclusion(stepIndex: Int, graph: G, console: OutputConsole): Unit = {}
+
+  protected def printConclusion(stepIndex: Int, graph: G, console: OutputConsole): Unit = {}
 
   def partialSolutionVertexes: Set[V] =
     Set[V]()

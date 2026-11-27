@@ -7,8 +7,7 @@ import info.gianlucacosta.graphsj.scenarios.classic.design.{ClassicDesignControl
 import scalafx.geometry.Point2D
 
 class PrimDesignController
-  extends ClassicDesignController
-  with ClassicVertexNamingController
+  extends ClassicVertexNamingController
   with EditVertexName
   with EditLinkWeight {
   override type DesignVertex =
@@ -20,6 +19,6 @@ class PrimDesignController
   override val designVertexClass: Class[_ <: PrimDesignVertex] =
     classOf[PrimDesignVertex]
 
-  override val designLinkClass: Class[_ <: DesignLink] =
+  override val designLinkClass: Class[_ <: PrimDesignEdge] =
     classOf[PrimDesignEdge]
 }

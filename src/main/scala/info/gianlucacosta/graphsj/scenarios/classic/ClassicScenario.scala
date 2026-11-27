@@ -15,7 +15,7 @@ object ClassicScenario {
 
 abstract class ClassicScenario extends Scenario {
   protected var verbose: Boolean =
-    true //TODO! false?
+    true
 
   override def stylesheets: List[String] =
     List(

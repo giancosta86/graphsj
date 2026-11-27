@@ -2,7 +2,7 @@ package info.gianlucacosta.graphsj.scenarios.classic.design
 
 import info.gianlucacosta.eighthbridge.fx.VisualEdge
 
-class ClassicDesignEdge
+trait ClassicDesignEdge
   extends ClassicDesignLink
     with VisualEdge
 

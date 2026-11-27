@@ -6,7 +6,8 @@ import info.gianlucacosta.helios.mathutils.Numbers
 class PrimRuntimeVertex(algorithm: PrimAlgorithm)
   extends ClassicRuntimeVertex(algorithm) {
   override def label: String = {
-    algorithm.closestTreeVertexByVertex.get(this)
+    algorithm.closestTreeVertexByVertex
+      .get(this)
       .map(closestTreeVertex => {
         val minDistanceFromTree =
           algorithm.minDistanceFromTreeByVertex(this)
