@@ -4,7 +4,7 @@ import info.gianlucacosta.eighthbridge.core.facets.HasNameSettable
 import info.gianlucacosta.eighthbridge.fx.controllers.creation.CreateVertexWithName
 import scalafx.geometry.Point2D
 
-trait ClassicVertexNamingDesignController
+trait ClassicVertexNamingController
   extends ClassicDesignController
     with CreateVertexWithName
   {
